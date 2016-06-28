@@ -7,6 +7,8 @@ import java.util.List;
  */
 public class Namespace extends Keyword{
 
+    private Namespace mChildNamespace;
+
     public Namespace(String keyword) {
         super(keyword);
     }
@@ -23,4 +25,13 @@ public class Namespace extends Keyword{
 
 
     }
+
+    public void setChild(Namespace namespace) {
+        mChildNamespace = namespace;
+    }
+
+    public Namespace getNamespace(){
+        return mChildNamespace;
+    }
+
 }

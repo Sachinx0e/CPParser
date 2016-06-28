@@ -1,7 +1,8 @@
 package keywords;
 
-import com.company.CppKeywordNames;
+import com.cpp.CppKeywordNames;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -9,6 +10,7 @@ import java.util.List;
  */
 public class AST {
 
+    ArrayList<ImportK> mImports = new ArrayList<>();
     Namespace mNamespace = null;
     private ClassK mClass = null;
 
@@ -48,5 +50,9 @@ public class AST {
     @Override
     public String toString() {
        return super.toString();
+    }
+
+    public void addImport(ImportK importK) {
+        mImports.add(importK);
     }
 }

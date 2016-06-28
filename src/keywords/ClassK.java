@@ -1,7 +1,5 @@
 package keywords;
 
-import com.company.CppKeywordNames;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,6 +8,7 @@ import java.util.List;
  */
 public class ClassK extends Keyword {
 
+    private ArrayList<Constructor> mConstructors = new ArrayList<>();
     private ArrayList<Variable> mVariables = new ArrayList<>();
     private ArrayList<Function> mFunctions = new ArrayList<>();
 
@@ -43,5 +42,9 @@ public class ClassK extends Keyword {
 
     public List<Function> getFunctions() {
         return mFunctions;
+    }
+
+    public void addConstructors(Constructor constructor) {
+        mConstructors.add(constructor);
     }
 }

@@ -1,6 +1,6 @@
 package keywords;
 
-import com.company.CppKeywordNames;
+import com.cpp.CppKeywordNames;
 
 import java.util.List;
 

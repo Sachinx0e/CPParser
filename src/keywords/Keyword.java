@@ -6,7 +6,7 @@ import java.util.List;
 /**
  * Created by Rando on 6/27/2016.
  */
-public class Keyword {
+public abstract class Keyword<T> {
     private String mName;
 
     public Keyword(String name){
@@ -27,4 +27,6 @@ public class Keyword {
         }
         return wordsList;
     }
+
+
 }
