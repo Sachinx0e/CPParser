@@ -6,17 +6,11 @@ namespace NamespaceName {
 	    long longVariable;
 		static std::string STATIC_CONST_MEMBER;
 		
-		std::string getColorStr(int color,long variable2) {
-		    variable2 = 2;
-			return std::to_string(color);
-		}
+		std::string getColorStr(int color,long variable2);
 
-		int functionIntReturn(){
-		    return 0;
-		}
+		int functionIntReturn();
 
-		void functionVoidReturn(){
-            return;
-		}
+		void functionVoidReturn();
+
 	};
 }

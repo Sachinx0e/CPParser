@@ -11,10 +11,10 @@ public class Function extends Keyword {
 
     private List<Parameter> mParamaters;
     private boolean mIsStatic;
-    private String mReturnType;
+    private ReturnType mReturnType;
 
 
-    public Function(boolean isStatic, String returnType, String functionName, List<Parameter> parameters) {
+    public Function(boolean isStatic, ReturnType returnType, String functionName, List<Parameter> parameters) {
         super(functionName);
         mIsStatic = isStatic;
         mReturnType = returnType;
@@ -55,13 +55,13 @@ public class Function extends Keyword {
                  isStatic = true;
             }
 
-            String returnType = null;
+            ReturnType returnType = null;
             String functionName = null;
             if(isStatic){
-                returnType = words.get(1);
+                returnType = ReturnType.read(words.get(1));
                 functionName = words.get(2);
             }else {
-                returnType = words.get(0);
+                returnType = ReturnType.read(words.get(0));
                 functionName = words.get(1);
             }
 

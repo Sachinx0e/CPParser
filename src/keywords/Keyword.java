@@ -6,7 +6,7 @@ import java.util.List;
 /**
  * Created by Rando on 6/27/2016.
  */
-public abstract class Keyword<T> {
+public abstract class Keyword {
     private String mName;
 
     public Keyword(String name){

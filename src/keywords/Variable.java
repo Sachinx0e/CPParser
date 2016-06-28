@@ -10,41 +10,18 @@ import java.util.List;
 public class Variable extends Keyword {
 
     private final String mType;
-    private boolean mIsStatic;
+    private final boolean mIsConst;
+    private final boolean mIsStatic;
+    private final boolean mIsRef;
+    private final boolean mIsPointer;
 
-    public Variable(boolean isStatic,String type,String keyword) {
+    public Variable(boolean isStatic,boolean isConst,String type,boolean isRef,boolean isPointer,String keyword) {
         super(keyword);
         mType = type;
-        setIsStatic(isStatic);
-    }
-
-    public void setIsStatic(boolean isStatic){
         mIsStatic = isStatic;
-    }
-
-    public String getType(){
-        return mType;
-    }
-
-    public boolean getIsStatic(){
-        return mIsStatic;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if(obj instanceof Variable){
-            Variable rVariable = (Variable) obj;
-            Variable lVariable = this;
-            if(rVariable.mType.equals(lVariable.getType())
-                    && rVariable.getName().equals(lVariable.getName())
-                    && rVariable.getIsStatic() == lVariable.getIsStatic()){
-                return true;
-            }else {
-                return false;
-            }
-        }else {
-            return false;
-        }
+        mIsConst = isConst;
+        mIsRef = isRef;
+        mIsPointer = isPointer;
     }
 
     @Override
@@ -61,21 +38,56 @@ public class Variable extends Keyword {
         List<String> words = Keyword.getWords(currentLine.replace(";","")," ");
         if(words.size() > 0){
             boolean isStatic = false;
+            boolean isConst = false;
+
             if(words.get(0).equals(CppKeywordNames.STATIC)){
                 isStatic = true;
+                if(words.get(1).equals(CppKeywordNames.CONST)){
+                    isConst = true;
+                }else {
+                    isConst = false;
+                }
+            }else if(words.get(0).equals(CppKeywordNames.CONST)){
+                isStatic = false;
+                isConst = true;
             }
 
             String type;
             String name;
-            if(isStatic){
-                type = words.get(1);
-                name = words.get(2);
-            }else {
-                type = words.get(0);
-                name = words.get(1);
+            int typeIndex;
+            int nameIndex;
+            if(isStatic && isConst){
+                typeIndex = 2;
+                nameIndex = 3;
+            }else if(isStatic || isConst){
+                typeIndex = 1;
+                nameIndex = 2;
+            }
+            else {
+                typeIndex = 0;
+                nameIndex = 1;
             }
 
-            Variable variable = new Variable(isStatic,type,name);
+
+            boolean isRef;
+            boolean isPointer;
+            if(words.get(typeIndex).contains("&")){
+                isRef = true;
+                isPointer = false;
+                type = words.get(typeIndex).replace("&","");
+            }else if(words.get(typeIndex).contains("*")){
+                isRef = false;
+                isPointer = true;
+                type = words.get(typeIndex).replace("*","");
+            }else {
+                isRef = false;
+                isPointer = false;
+                type = words.get(typeIndex);
+            }
+
+            name = words.get(nameIndex);
+
+            Variable variable = new Variable(isStatic,isConst,type,isRef,isPointer,name);
             return variable;
 
         }

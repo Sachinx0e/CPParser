@@ -18,7 +18,7 @@ public class Main {
 
 	    //read the file
         AST ast = new AST();
-        BufferedReader bufferedReader = new BufferedReader(new FileReader("LocalDate.h"));
+        BufferedReader bufferedReader = new BufferedReader(new FileReader("ColorHelper.h"));
         currentLine = null;
 
         char previousChar = 'j';
@@ -27,7 +27,7 @@ public class Main {
 
             currentLine = currentLine.trim();
             if(currentLine.length() != 0){
-                LanguageContruct contruct = CppParser.getConstruct(currentLine);
+                LanguageContruct contruct = CppParser.getConstruct(currentLine,ast);
                 switch (contruct){
                     case IMPORTS:
                         ImportK importK = ImportK.read(currentLine);
@@ -46,6 +46,12 @@ public class Main {
                         ast.setClass(classK);
                         break;
                     case VARIABLE:
+                        Variable variable = Variable.read(currentLine);
+                        if(ast.getClassK() != null){
+                            ast.getClassK().addVariable(variable);
+                        }else{
+                            throw new RuntimeException("Class not found for variable : " + variable.getName());
+                        }
                         break;
                     case CONSTRUCTOR:
                         Constructor constructor = Constructor.read(currentLine);
@@ -53,12 +59,18 @@ public class Main {
                         if(classK != null){
                             classK.addConstructors(constructor);
                         }else{
-                            throw new RuntimeException("Class not found for constructor " + constructor.getName());
+                            throw new RuntimeException("Class not found for constructor : " + constructor.getName());
                         }
                         break;
                     case DESTRUCTOR:
                         break;
                     case FUNCTION:
+                        Function function = Function.read(currentLine);
+                        if(ast.getClassK() != null){
+                            ast.getClassK().addFunctions(function);
+                        }else {
+                            throw new RuntimeException("Class not found for constructor : " + function.getName());
+                        }
                         break;
                     case STATEMENT:
                         break;
