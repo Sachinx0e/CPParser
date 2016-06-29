@@ -27,7 +27,7 @@ public class Main {
 
             currentLine = currentLine.trim();
             if(currentLine.length() != 0){
-                LanguageContruct contruct = CppParser.getConstruct(currentLine,ast);
+                LanguageContruct contruct = CppParser.getConstruct(currentLine,ast,true);
                 switch (contruct){
                     case IMPORTS:
                         ImportK importK = ImportK.read(currentLine);

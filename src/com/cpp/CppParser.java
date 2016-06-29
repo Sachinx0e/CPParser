@@ -9,7 +9,7 @@ import java.util.List;
  * Created by Rando on 6/28/2016.
  */
 public class CppParser {
-    public static LanguageContruct getConstruct(String currentLine, AST ast) {
+    public static LanguageContruct getConstruct(String currentLine, AST ast,boolean isHeader) {
         List<String> words = Keyword.getWords(currentLine," ");
         try{
             if(words.size() > 0){
@@ -37,7 +37,12 @@ public class CppParser {
                 }
 
                 //is function in header only
-                else if(!currentLine.contains("~") && currentLine.contains("(") && currentLine.contains(")") && currentLine.contains(";")){
+                else if(isHeader && !currentLine.contains("~") && currentLine.contains("(") && currentLine.contains(")") && currentLine.contains(";")){
+                    return LanguageContruct.FUNCTION;
+                }
+
+                //is function in header only
+                else if(!isHeader && !currentLine.contains("~") && currentLine.contains("(") && currentLine.contains(")") && currentLine.contains("{")){
                     return LanguageContruct.FUNCTION;
                 }
 
