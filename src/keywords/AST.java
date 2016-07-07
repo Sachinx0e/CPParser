@@ -13,6 +13,7 @@ public class AST {
     ArrayList<ImportK> mImports = new ArrayList<>();
     Namespace mNamespace = null;
     private ClassK mClass = null;
+    private boolean mHasReachedPrivate;
 
     public Namespace getNamespace(){
         return mNamespace;
@@ -55,4 +56,13 @@ public class AST {
     public void addImport(ImportK importK) {
         mImports.add(importK);
     }
+
+    public void setHasReachedPrivate(boolean hasReachedPrivate){
+        mHasReachedPrivate = hasReachedPrivate;
+    }
+
+    public boolean getHasReachedPrivate(){
+        return mHasReachedPrivate;
+    }
+
 }

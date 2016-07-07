@@ -11,4 +11,5 @@ public class CppKeywordNames {
     public static String CLASS = "class";
     public static String FUNCTION = "function";
     public static String VOID = "void";
+    public static String PRIVATE = "private:";
 }

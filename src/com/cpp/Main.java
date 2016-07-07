@@ -18,7 +18,7 @@ public class Main {
 
 	    //read the file
         AST ast = new AST();
-        BufferedReader bufferedReader = new BufferedReader(new FileReader("ColorHelper.h"));
+        BufferedReader bufferedReader = new BufferedReader(new FileReader("Habit.h"));
         currentLine = null;
 
         char previousChar = 'j';
@@ -26,7 +26,7 @@ public class Main {
         while((currentLine = bufferedReader.readLine()) != null){
 
             currentLine = currentLine.trim();
-            if(currentLine.length() != 0){
+            if(!ast.getHasReachedPrivate() && currentLine.length() != 0){
                 LanguageContruct contruct = CppParser.getConstruct(currentLine,ast,true);
                 switch (contruct){
                     case IMPORTS:
@@ -76,6 +76,8 @@ public class Main {
                         break;
                     case UNKNOWN:
                         break;
+                    case PRIVATE:
+                        ast.setHasReachedPrivate(true);
                 }
             }
         }

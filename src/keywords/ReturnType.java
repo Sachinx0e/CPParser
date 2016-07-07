@@ -49,4 +49,15 @@ public class ReturnType extends Keyword {
 
     }
 
+    @Override
+    public String toString() {
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append(getName());
+        if(isReference()){
+            stringBuilder.append("&");
+        }else if(isPointer()){
+            stringBuilder.append("*");
+        }
+        return stringBuilder.toString();
+    }
 }

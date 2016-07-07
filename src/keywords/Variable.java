@@ -30,7 +30,22 @@ public class Variable extends Keyword {
         if(mIsStatic){
             stringBuilder.append(CppKeywordNames.STATIC).append(" ");
         }
+
+        if(mIsConst){
+            stringBuilder.append(CppKeywordNames.CONST).append(" ");
+        }
+
         stringBuilder.append(mType).append(" ").append(getName());
+
+        if(mIsRef){
+            stringBuilder.append("&");
+        }
+
+        if(mIsPointer){
+            stringBuilder.append("*");
+        }
+
+
         return stringBuilder.toString();
     }
 

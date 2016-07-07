@@ -29,6 +29,11 @@ public class CppParser {
                     return LanguageContruct.CLASS;
                 }
 
+                //private:
+                else if(words.get(0).equals(CppKeywordNames.PRIVATE)){
+                    return LanguageContruct.PRIVATE;
+                }
+
                 //constructor
                 else if(ast.getClassK() != null &&
                         !words.get(0).contains("~") &&
@@ -47,7 +52,7 @@ public class CppParser {
                 }
 
                 //variable
-                else if(currentLine.contains(";") && !currentLine.contains("}")){
+                else if(!currentLine.contains("~") && currentLine.contains(";") && !currentLine.contains("}")){
                     return LanguageContruct.VARIABLE;
                 }
 
@@ -55,6 +60,8 @@ public class CppParser {
                 else {
                     return LanguageContruct.UNKNOWN;
                 }
+
+
             }else {
                 return LanguageContruct.UNKNOWN;
             }
