@@ -1,30 +1,26 @@
-#include <LocalDateWrapper.h>
+#include <headers\LocalDateWrapper.h>
 
-Applib::DateTime::LocalDate::LocalDate():mLocalDate(){
-
-}
-
-Applib::DateTime::LocalDate::LocalDate(LocalDate^ date):mLocalDate(date){
+RewireRuntimeComponent::LocalDate::LocalDate():mLocalDate(){
 
 }
 
-Applib::DateTime::LocalDate::LocalDate(LocalDate^ date):mLocalDate(date){
+RewireRuntimeComponent::LocalDate::LocalDate(LocalDate^ date):mLocalDate(date){
 
 }
 
-Applib::DateTime::LocalDate::LocalDate(int64 millis):mLocalDate(millis){
+RewireRuntimeComponent::LocalDate::LocalDate(int64 millis):mLocalDate(millis){
 
 }
 
-Applib::DateTime::LocalDate::LocalDate(Platform::String^ dateStr):mLocalDate(dateStr){
+RewireRuntimeComponent::LocalDate::LocalDate(Platform::String^ dateStr):mLocalDate(dateStr){
 
 }
 
-Applib::DateTime::LocalDate::LocalDate(bool isValid):mLocalDate(isValid){
+RewireRuntimeComponent::LocalDate::LocalDate(bool isValid):mLocalDate(isValid){
 
 }
 
-Applib::DateTime::LocalDate::LocalDate(int16 day,int16 month,int16 year):mLocalDate(day,month,year){
+RewireRuntimeComponent::LocalDate::LocalDate(int16 day,int16 month,int16 year):mLocalDate(day,month,year){
 
 }
 

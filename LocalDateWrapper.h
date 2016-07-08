@@ -9,8 +9,6 @@ namespace RewireRuntimeComponent {
 
          LocalDate(LocalDate^ date);
 
-         LocalDate(LocalDate^ date);
-
          LocalDate(int64 millis);
 
          LocalDate(Platform::String^ dateStr);

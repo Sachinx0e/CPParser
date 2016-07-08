@@ -59,12 +59,12 @@ public class Constructor extends Keyword {
         }
     }
 
-    public String generateDefination(AST ast, GeneratorType generatorType) {
+    public String generateDefination(AST ast, String namespace, GeneratorType generatorType) {
         if(generatorType == GeneratorType.CXX){
 
             //fully qualified names
             StringBuilder stringBuilder = new StringBuilder();
-            stringBuilder.append(ast.getClassK().getQualifiedName(ast));
+            stringBuilder.append(namespace).append("::").append(ast.getClassK().getName());
             stringBuilder.append("::").append(getName());
 
             //paramters

@@ -37,7 +37,8 @@ public class CppParser {
                 //constructor
                 else if(ast.getClassK() != null &&
                         !words.get(0).contains("~") &&
-                        words.get(0).contains(ast.getClassK().getName() + "(")){
+                        words.get(0).contains(ast.getClassK().getName() + "(") &&
+                        !currentLine.contains(CppKeywordNames.CONST)){
                     return LanguageContruct.CONSTRUCTOR;
                 }
 

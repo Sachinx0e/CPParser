@@ -97,14 +97,14 @@ public class Generator {
         StringBuilder stringBuilder = new StringBuilder();
 
         //import statement for wrapped class header
-        stringBuilder.append("#include").append(" ").append("<").append(mTranslationUnitName + ".h").append(">");
+        stringBuilder.append("#include").append(" ").append("<").append("headers\\").append(mTranslationUnitName + ".h").append(">");
         stringBuilder.append("\n\n");
 
         //start adding constructors
         List<Constructor> constructors = mAST.getClassK().getConstructors();
         for(int i = 0;i<constructors.size();i++){
             Constructor constructor = constructors.get(i);
-            String constructorStr = constructor.generateDefination(mAST,mGeneratorType) + "\n";
+            String constructorStr = constructor.generateDefination(mAST,mNamespace,mGeneratorType) + "\n";
             stringBuilder.append(constructorStr);
             stringBuilder.append("\n");
         }
