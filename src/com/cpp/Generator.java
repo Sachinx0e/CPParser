@@ -1,10 +1,12 @@
 package com.cpp;
 
+import interfaces.Interface;
 import keywords.AST;
 import keywords.Constructor;
 import keywords.Function;
 
 import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.List;
@@ -16,16 +18,22 @@ public class Generator {
 
     private final AST mAST;
     private final String mNamespace;
-    private final String mTranslationUnitName;
-    private final String mHeaderName;
     private final GeneratorType mGeneratorType;
+    private final Interface mInterfaceK;
+    private final File mOutPutDir;
+    private final File mHeaderOutPutDir;
+    private final File mSourceOutPutDir;
 
-    public Generator(AST ast, String namespace, String headerName, String translationUnitName,GeneratorType generatorType){
+    public Generator(AST ast, String namespace, Interface interfaceK, GeneratorType generatorType, File outPutDir){
         mAST = ast;
         mNamespace = namespace;
-        mTranslationUnitName = translationUnitName;
-        mHeaderName = headerName;
         mGeneratorType = generatorType;
+        mInterfaceK = interfaceK;
+        mOutPutDir = outPutDir;
+        mHeaderOutPutDir = new File(outPutDir,"headers");
+        mHeaderOutPutDir.mkdir();
+        mSourceOutPutDir = new File(outPutDir,"source");
+        mSourceOutPutDir.mkdir();
     }
 
     public void generateHeader() throws IOException {
@@ -36,8 +44,12 @@ public class Generator {
         stringBuilder.append("#pragma once").append("\n\n");
 
         //import statement for wrapped class header
-        stringBuilder.append("#include").append(" ").append("<").append(mHeaderName).append(">");
-        stringBuilder.append("\n\n");
+        stringBuilder.append(CXXTemplates.IMPORT.replace("%",mInterfaceK.HEADER_NAME)).append("\n");
+        List<String> headers = mInterfaceK.getImportFiles();
+        for(int i = 0;i<headers.size();i++){
+            stringBuilder.append(CXXTemplates.IMPORT.replace("%",headers.get(i))).append("\n");
+        }
+        stringBuilder.append("\n");
 
         //namespace for wrappped class
         String namespaceStr = CXXTemplates.NAMESPACE.replace("%",mNamespace);
@@ -87,7 +99,7 @@ public class Generator {
         System.out.print(stringBuilder.toString());
         System.out.print("  ");
 
-        FileWriter fileWriter = new FileWriter(mTranslationUnitName + ".h");
+        FileWriter fileWriter = new FileWriter(new File(mHeaderOutPutDir,mInterfaceK.getTranslationUnitHeaderName()));
         BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
         bufferedWriter.write(stringBuilder.toString());
         bufferedWriter.flush();
@@ -97,7 +109,7 @@ public class Generator {
         StringBuilder stringBuilder = new StringBuilder();
 
         //import statement for wrapped class header
-        stringBuilder.append("#include").append(" ").append("<").append("headers\\").append(mTranslationUnitName + ".h").append(">");
+        stringBuilder.append("#include").append(" ").append("<").append("headers\\").append(mInterfaceK.getTranslationUnitHeaderName()).append(">");
         stringBuilder.append("\n\n");
 
         //start adding constructors
@@ -113,7 +125,7 @@ public class Generator {
         System.out.print(stringBuilder.toString());
         System.out.print("  ");
 
-        FileWriter fileWriter = new FileWriter(mTranslationUnitName + ".cpp");
+        FileWriter fileWriter = new FileWriter(new File(mSourceOutPutDir,mInterfaceK.getTranslationUnitSourceName()));
         BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
         bufferedWriter.write(stringBuilder.toString());
         bufferedWriter.flush();

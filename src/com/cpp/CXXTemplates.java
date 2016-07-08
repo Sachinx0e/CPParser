@@ -9,4 +9,5 @@ public class CXXTemplates {
     public static final String SPACING_3 = "         ";
     public static String NAMESPACE = "namespace % {";
     public static String CLASS = "public ref class % sealed {";
+    public static String IMPORT = "#include <%>";
 }
