@@ -85,7 +85,8 @@ public class Main {
         System.out.print(ast.getString());
 
         Generator cxxGenerator = new Generator(ast,"RewireRuntimeComponent","LocalDate.h","LocalDateWrapper",GeneratorType.CXX);
-        cxxGenerator.generate();
+        cxxGenerator.generateHeader();
+        cxxGenerator.generateSource();
 
     }
 

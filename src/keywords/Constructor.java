@@ -1,5 +1,6 @@
 package keywords;
 
+import com.cpp.CXXTemplates;
 import com.cpp.GeneratorType;
 
 import java.util.ArrayList;
@@ -38,7 +39,7 @@ public class Constructor extends Keyword {
         }
     }
 
-    public String generate(GeneratorType generatorType) {
+    public String generateDeclaration(GeneratorType generatorType) {
         if(generatorType == GeneratorType.CXX){
             StringBuilder stringBuilder = new StringBuilder();
             stringBuilder.append(getName());
@@ -53,6 +54,50 @@ public class Constructor extends Keyword {
             }
             stringBuilder.append(");");
             return stringBuilder.toString();
+        }else {
+            return null;
+        }
+    }
+
+    public String generateDefination(AST ast, GeneratorType generatorType) {
+        if(generatorType == GeneratorType.CXX){
+
+            //fully qualified names
+            StringBuilder stringBuilder = new StringBuilder();
+            stringBuilder.append(ast.getClassK().getQualifiedName(ast));
+            stringBuilder.append("::").append(getName());
+
+            //paramters
+            stringBuilder.append("(");
+            int count = mParameters.size();
+            for(int i = 0;i<count;i++){
+                Parameter parameter = mParameters.get(i);
+                stringBuilder.append(parameter.generate(generatorType));
+                if(i != count -1){
+                    stringBuilder.append(",");
+                }
+            }
+            stringBuilder.append(")");
+
+            //init member variable
+            String mVariableName = "m" + ast.getClassK().getName();
+            stringBuilder.append(":").append(mVariableName);
+
+            //paramters to the mVariable
+            stringBuilder.append("(");
+            for(int i = 0;i<count;i++){
+                Parameter parameter = mParameters.get(i);
+                stringBuilder.append(parameter.getName());
+                if(i != count -1){
+                    stringBuilder.append(",");
+                }
+            }
+            stringBuilder.append(")");
+
+            //close the constructor
+            stringBuilder.append("{").append("\n\n").append("}");
+            return stringBuilder.toString();
+
         }else {
             return null;
         }

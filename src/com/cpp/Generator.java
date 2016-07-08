@@ -28,7 +28,7 @@ public class Generator {
         mGeneratorType = generatorType;
     }
 
-    public void generate() throws IOException {
+    public void generateHeader() throws IOException {
 
         StringBuilder stringBuilder = new StringBuilder();
 
@@ -45,16 +45,16 @@ public class Generator {
 
         //class name for wrapper class
         String classStr = CXXTemplates.CLASS.replace("%",mAST.getClassK().getName());
-        stringBuilder.append(classStr).append("\n");
+        stringBuilder.append(CXXTemplates.SPACING_1).append(classStr).append("\n");
 
         //public scope
-        stringBuilder.append(CppKeywordNames.PUBLIC).append("\n");
+        stringBuilder.append(CXXTemplates.SPACING_2).append(CppKeywordNames.PUBLIC).append("\n");
 
         //start adding constructors
         List<Constructor> constructors = mAST.getClassK().getConstructors();
         for(int i = 0;i<constructors.size();i++){
             Constructor constructor = constructors.get(i);
-            String constructorStr = "    " + constructor.generate(mGeneratorType) + "\n";
+            String constructorStr = CXXTemplates.SPACING_3 + constructor.generateDeclaration(mGeneratorType) + "\n";
             stringBuilder.append(constructorStr);
             stringBuilder.append("\n");
         }
@@ -64,18 +64,18 @@ public class Generator {
         for(int i = 0;i<functionList.size();i++){
             Function function = functionList.get(i);
             if(!function.getName().contains("operator")){
-                String functionStr = "    " + function.generate(mGeneratorType) + "\n";
+                String functionStr = CXXTemplates.SPACING_3 + function.generateDeclarations(mGeneratorType) + "\n";
                 stringBuilder.append(functionStr);
                 stringBuilder.append("\n");
             }
         }
 
         //private member
-        stringBuilder.append(CppKeywordNames.PRIVATE).append("\n");
+        stringBuilder.append(CXXTemplates.SPACING_2).append(CppKeywordNames.PRIVATE).append("\n");
 
         //wrapped class member variable
         String classAsMemStr = mAST.getClassK().getQualifiedName(mAST) + " " + "m" + mAST.getClassK().getName() + ";";
-        stringBuilder.append("    ").append(classAsMemStr).append("\n\n");
+        stringBuilder.append(CXXTemplates.SPACING_3).append(classAsMemStr).append("\n\n");
 
         //close class
         stringBuilder.append("   };\n");
@@ -88,6 +88,32 @@ public class Generator {
         System.out.print("  ");
 
         FileWriter fileWriter = new FileWriter(mTranslationUnitName + ".h");
+        BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
+        bufferedWriter.write(stringBuilder.toString());
+        bufferedWriter.flush();
+    }
+
+    public void generateSource() throws IOException {
+        StringBuilder stringBuilder = new StringBuilder();
+
+        //import statement for wrapped class header
+        stringBuilder.append("#include").append(" ").append("<").append(mTranslationUnitName + ".h").append(">");
+        stringBuilder.append("\n\n");
+
+        //start adding constructors
+        List<Constructor> constructors = mAST.getClassK().getConstructors();
+        for(int i = 0;i<constructors.size();i++){
+            Constructor constructor = constructors.get(i);
+            String constructorStr = constructor.generateDefination(mAST,mGeneratorType) + "\n";
+            stringBuilder.append(constructorStr);
+            stringBuilder.append("\n");
+        }
+
+        System.out.print("  ");
+        System.out.print(stringBuilder.toString());
+        System.out.print("  ");
+
+        FileWriter fileWriter = new FileWriter(mTranslationUnitName + ".cpp");
         BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
         bufferedWriter.write(stringBuilder.toString());
         bufferedWriter.flush();

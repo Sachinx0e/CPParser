@@ -3,72 +3,72 @@
 #include <LocalDate.h>
 
 namespace RewireRuntimeComponent {
-public ref class LocalDate sealed {
-public:
-    LocalDate();
+   public ref class LocalDate sealed {
+      public:
+         LocalDate();
 
-    LocalDate(LocalDate^ date);
+         LocalDate(LocalDate^ date);
 
-    LocalDate(LocalDate^ date);
+         LocalDate(LocalDate^ date);
 
-    LocalDate(int64 millis);
+         LocalDate(int64 millis);
 
-    LocalDate(Platform::String^ dateStr);
+         LocalDate(Platform::String^ dateStr);
 
-    LocalDate(bool isValid);
+         LocalDate(bool isValid);
 
-    LocalDate(int16 day,int16 month,int16 year);
+         LocalDate(int16 day,int16 month,int16 year);
 
-    int32 getDayOfWeek();
+         int32 getDayOfWeek();
 
-    int32 getWeekOfMonth();
+         int32 getWeekOfMonth();
 
-    int32 getDayOfMonth();
+         int32 getDayOfMonth();
 
-    int32 getDayOfYear();
+         int32 getDayOfYear();
 
-    int32 getMonth();
+         int32 getMonth();
 
-    int32 getYear();
+         int32 getYear();
 
-    LocalDate^ addYears(int32 num_of_years);
+         LocalDate^ addYears(int32 num_of_years);
 
-    LocalDate^ minusYears(int32 num_of_years);
+         LocalDate^ minusYears(int32 num_of_years);
 
-    LocalDate^ addMonths(int32 num_of_months);
+         LocalDate^ addMonths(int32 num_of_months);
 
-    LocalDate^ minusMonths(int32 num_of_months);
+         LocalDate^ minusMonths(int32 num_of_months);
 
-    LocalDate^ addDays(int32 num_of_days);
+         LocalDate^ addDays(int32 num_of_days);
 
-    LocalDate^ minusDays(int32 num_of_days);
+         LocalDate^ minusDays(int32 num_of_days);
 
-    LocalDate^ addWeeks(int32 num_of_weeks);
+         LocalDate^ addWeeks(int32 num_of_weeks);
 
-    LocalDate^ minusWeeks(int32 num_of_weeks);
+         LocalDate^ minusWeeks(int32 num_of_weeks);
 
-    LocalDate^ getFirstDateOfYear();
+         LocalDate^ getFirstDateOfYear();
 
-    LocalDate^ getLastDateOfYear();
+         LocalDate^ getLastDateOfYear();
 
-    LocalDate^ getFirstDateOfMonth();
+         LocalDate^ getFirstDateOfMonth();
 
-    LocalDate^ getLastDateOfMonth();
+         LocalDate^ getLastDateOfMonth();
 
-    int32 getWeekNumber();
+         int32 getWeekNumber();
 
-    LocalDate^ getFirstDateOfWeek();
+         LocalDate^ getFirstDateOfWeek();
 
-    LocalDate^ getLastDateOfWeek();
+         LocalDate^ getLastDateOfWeek();
 
-    bool isValid();
+         bool isValid();
 
-    Platform::String^ toString();
+         Platform::String^ toString();
 
-    static DurationDate^ getDifference(LocalDate^ lDate,LocalDate^ rDate);
+         static DurationDate^ getDifference(LocalDate^ lDate,LocalDate^ rDate);
 
-private:
-    Applib::DateTime::LocalDate mLocalDate;
+      private:
+         Applib::DateTime::LocalDate mLocalDate;
 
    };
 }

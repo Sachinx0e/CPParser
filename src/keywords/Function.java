@@ -47,7 +47,7 @@ public class Function extends Keyword {
         return stringBuilder.toString();
     }
 
-    public String generate(GeneratorType generatorType){
+    public String generateDeclarations(GeneratorType generatorType){
         if(generatorType == GeneratorType.CXX){
             StringBuilder stringBuilder = new StringBuilder();
             if(mIsStatic){
