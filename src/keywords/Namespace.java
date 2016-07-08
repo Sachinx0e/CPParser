@@ -1,5 +1,7 @@
 package keywords;
 
+import com.cpp.GeneratorType;
+
 import java.util.List;
 
 /**
@@ -32,6 +34,24 @@ public class Namespace extends Keyword{
 
     public Namespace getNamespace(){
         return mChildNamespace;
+    }
+
+    public String getQualifiedName(){
+        if(mChildNamespace != null){
+            return getName() + "::" + mChildNamespace.getQualifiedName();
+        }else {
+            return getName();
+        }
+    }
+
+    public String generate(GeneratorType generatorType){
+        if(generatorType == GeneratorType.CXX){
+            String name = getQualifiedName();
+            StringBuilder stringBuilder = new StringBuilder();
+            return "namespace" + " " + name + "{";
+        }else {
+            return "";
+        }
     }
 
 }

@@ -18,7 +18,7 @@ public class Main {
 
 	    //read the file
         AST ast = new AST();
-        BufferedReader bufferedReader = new BufferedReader(new FileReader("Habit.h"));
+        BufferedReader bufferedReader = new BufferedReader(new FileReader("LocalDate.h"));
         currentLine = null;
 
         char previousChar = 'j';
@@ -83,6 +83,9 @@ public class Main {
         }
 
         System.out.print(ast.getString());
+
+        Generator cxxGenerator = new Generator(ast,"RewireRuntimeComponent","LocalDate.h","LocalDateWrapper",GeneratorType.CXX);
+        cxxGenerator.generate();
 
     }
 

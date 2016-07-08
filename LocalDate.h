@@ -99,10 +99,10 @@ namespace Applib {
 			/**
 			* Overide <= operator
 			*/
-            bool operator <=(LocalDate& rDate);
+            bool operator<=(LocalDate& rDate);
 
 
-            bool operator <=(const LocalDate& rDate) const;
+            bool operator<=(const LocalDate& rDate) const;
 
 
 			/**

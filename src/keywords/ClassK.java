@@ -47,4 +47,13 @@ public class ClassK extends Keyword {
     public void addConstructors(Constructor constructor) {
         mConstructors.add(constructor);
     }
+
+    public List<Constructor> getConstructors() {
+        return mConstructors;
+    }
+
+    public String getQualifiedName(AST ast) {
+        String qualifiedName = ast.getNamespace().getQualifiedName() + "::" + getName();
+        return qualifiedName;
+    }
 }

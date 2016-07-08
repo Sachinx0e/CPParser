@@ -42,12 +42,8 @@ public class CppParser {
                 }
 
                 //is function in header only
-                else if(isHeader && !currentLine.contains("~") && currentLine.contains("(") && currentLine.contains(")") && currentLine.contains(";")){
-                    return LanguageContruct.FUNCTION;
-                }
-
-                //is function in header only
-                else if(!isHeader && !currentLine.contains("~") && currentLine.contains("(") && currentLine.contains(")") && currentLine.contains("{")){
+                else if(isHeader && !currentLine.contains("~") && currentLine.contains("(") && currentLine.contains(")") && currentLine.contains(";")
+                        && !currentLine.contains(CppKeywordNames.CONST)){
                     return LanguageContruct.FUNCTION;
                 }
 

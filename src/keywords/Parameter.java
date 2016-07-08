@@ -1,6 +1,8 @@
 package keywords;
 
 import com.cpp.CppKeywordNames;
+import com.cpp.GeneratorType;
+import com.cpp.TypeMappings;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -159,5 +161,13 @@ public class Parameter extends Keyword {
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append(mType).append(" ").append(getName());
         return stringBuilder.toString();
+    }
+
+    public String generate(GeneratorType generatorType) {
+        if(generatorType == GeneratorType.CXX){
+            return TypeMappings.getMapping(mType) + " " + getName();
+        }else {
+            return null;
+        }
     }
 }
