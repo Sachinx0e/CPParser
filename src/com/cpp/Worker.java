@@ -3,11 +3,9 @@ package com.cpp;
 import interfaces.Interface;
 import interfaces.InterfaceParser;
 import keywords.*;
+import misc.HeaderStore;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 
 /**
  * Created by Rando on 7/8/2016.
@@ -31,7 +29,11 @@ public class Worker {
 
         //read the file
         AST ast = new AST();
-        BufferedReader bufferedReader = new BufferedReader(new FileReader(interfaceK.HEADER_NAME));
+        File headerFile = HeaderStore.findHeader(interfaceK.HEADER_NAME);
+        if(headerFile == null){
+            throw new FileNotFoundException("Could not find " + interfaceK.HEADER_NAME);
+        }
+        BufferedReader bufferedReader = new BufferedReader(new FileReader(headerFile));
         currentLine = null;
 
         char previousChar = 'j';

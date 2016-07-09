@@ -6,6 +6,7 @@ import java.io.IOException;
 public class Main {
 
     private static String currentLine;
+    private static File mInterfaceFile;
 
     public static void main(String[] args) throws IOException {
 
@@ -15,14 +16,20 @@ public class Main {
         Thread.currentThread().setUncaughtExceptionHandler(exceptionHandler);
 
         String namespace = "RewireRuntimeComponent";
-        File LocalDateInterface = new File("interfaces/LocalDate.i");
+        File dir = new File("interfaces");
+        File[] interfaceFiles = dir.listFiles((dir1, name) -> {
+            System.out.println(name);
+            return name.toLowerCase().endsWith(".i");
+        });
 
         File OutPutDir = new File("cxx");
         OutPutDir.mkdir();
 
-        Worker worker = new Worker(LocalDateInterface,namespace,OutPutDir);
-        worker.work();
-
+        for(File interfaceFile : interfaceFiles){
+            mInterfaceFile = interfaceFile;
+            Worker worker = new Worker(interfaceFile,namespace,OutPutDir);
+            worker.work();
+        }
     }
 
     private static class ParseExceptionHandler implements Thread.UncaughtExceptionHandler {
@@ -30,6 +37,9 @@ public class Main {
         @Override
         public void uncaughtException(Thread t, Throwable e) {
             System.err.println("Error parsing line : " + currentLine);
+            if(mInterfaceFile != null){
+                System.err.println(mInterfaceFile.toString());
+            }
             e.printStackTrace();
         }
     }

@@ -1,0 +1,12 @@
+HEADER_FILE : DurationDate.h
+
+FUNCTIONS_IGNORE_START
+
+DurationDate(date startDate, date endDate);
+
+FUNCTIONS_IGNORE_END
+
+
+IMPORTS_START
+
+IMPORTS_END

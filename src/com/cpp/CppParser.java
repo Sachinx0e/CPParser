@@ -24,6 +24,11 @@ public class CppParser {
                     return LanguageContruct.NAMESPACE;
                 }
 
+                //ignore using namespace
+                else if(currentLine.contains("using namespace")){
+                    return LanguageContruct.UNKNOWN;
+                }
+
                 //class
                 else if(words.get(0).equals(CppKeywordNames.CLASS) && words.get(words.size() - 1).equals("{")){
                     return LanguageContruct.CLASS;

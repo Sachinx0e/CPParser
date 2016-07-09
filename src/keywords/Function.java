@@ -11,21 +11,28 @@ import java.util.List;
  */
 public class Function extends Keyword {
 
+    private final boolean mIsVirtual;
     private List<Parameter> mParamaters;
     private boolean mIsStatic;
     private ReturnType mReturnType;
 
 
-    public Function(boolean isStatic, ReturnType returnType, String functionName, List<Parameter> parameters) {
+    public Function(boolean isVirtual, boolean isStatic, ReturnType returnType, String functionName, List<Parameter> parameters) {
         super(functionName);
         mIsStatic = isStatic;
         mReturnType = returnType;
         mParamaters = parameters;
+        mIsVirtual = isVirtual;
     }
 
     @Override
     public String toString() {
         StringBuilder stringBuilder = new StringBuilder();
+
+        if(mIsVirtual){
+            stringBuilder.append(CppKeywordNames.VIRTUAL).append(" ");
+        }
+
         if(mIsStatic){
             stringBuilder.append(CppKeywordNames.STATIC).append(" ");
         }
@@ -50,6 +57,11 @@ public class Function extends Keyword {
     public String generateDeclarations(GeneratorType generatorType){
         if(generatorType == GeneratorType.CXX){
             StringBuilder stringBuilder = new StringBuilder();
+
+            if(mIsVirtual){
+                stringBuilder.append(CppKeywordNames.VIRTUAL).append(" ");
+            }
+
             if(mIsStatic){
                 stringBuilder.append(CppKeywordNames.STATIC).append(" ");
             }
@@ -80,24 +92,43 @@ public class Function extends Keyword {
         List<String> words = Keyword.getWords(currentLine.replace("("," ").replace(")"," ")," ");
         if(words.size() > 0){
 
-            boolean isStatic = false;
-            if(words.get(0).equals(CppKeywordNames.STATIC)){
-                 isStatic = true;
+            boolean isVirtual = false;
+            if(words.get(0).equals(CppKeywordNames.VIRTUAL)){
+                isVirtual = true;
             }
+
+            boolean isStatic = false;
+            if(isVirtual){
+                if(words.get(1).equals(CppKeywordNames.STATIC)){
+                    isStatic = true;
+                }
+            }else {
+                if(words.get(0).equals(CppKeywordNames.STATIC)){
+                    isStatic = true;
+                }
+            }
+
 
             ReturnType returnType = null;
             String functionName = null;
-            if(isStatic){
-                returnType = ReturnType.read(words.get(1));
-                functionName = words.get(2);
-            }else {
-                returnType = ReturnType.read(words.get(0));
-                functionName = words.get(1);
+            int returnTypeIndex = 0;
+            int functionNameIndex = 1;
+
+
+            if((isVirtual && !isStatic) || (!isVirtual && isStatic)){
+                returnTypeIndex = 1;
+                functionNameIndex = 2;
+            }else if(isVirtual && isStatic){
+                returnTypeIndex = 2;
+                functionNameIndex = 3;
             }
+
+            returnType = ReturnType.read(words.get(returnTypeIndex));
+            functionName = words.get(functionNameIndex);
 
             List<Parameter> parameters = Parameter.read(currentLine);
 
-            Function function = new Function(isStatic,returnType,functionName,parameters);
+            Function function = new Function(isVirtual,isStatic,returnType,functionName,parameters);
             return function;
 
         }else {

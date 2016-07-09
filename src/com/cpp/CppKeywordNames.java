@@ -8,6 +8,7 @@ public class CppKeywordNames {
     public static final String STATIC = "static";
     public static final String CONST = "const";
     public static final String PUBLIC = "public:";
+    public static final String VIRTUAL = "virtual";
     public static String NAMESPACE = "namespace";
     public static String CLASS = "class";
     public static String FUNCTION = "function";
