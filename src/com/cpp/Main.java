@@ -16,13 +16,13 @@ public class Main {
         Thread.currentThread().setUncaughtExceptionHandler(exceptionHandler);
 
         String namespace = "RewireRuntimeComponent";
-        File dir = new File("interfaces");
+        File dir = new File("interfaces_test");
         File[] interfaceFiles = dir.listFiles((dir1, name) -> {
             System.out.println(name);
             return name.toLowerCase().endsWith(".i");
         });
 
-        File OutPutDir = new File("cxx");
+        File OutPutDir = new File("D:\\Projects\\Rewire\\rewire_windows\\Rewire\\RewireRuntimeComponent");
         OutPutDir.mkdir();
 
         for(File interfaceFile : interfaceFiles){

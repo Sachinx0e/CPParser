@@ -16,8 +16,9 @@ public class Namespace extends Keyword{
     }
 
     public static Namespace read(String currentLine) {
-        List<String> words = Keyword.getWords(currentLine," ");
-        if(words.size() > 2){
+        String line = currentLine.replace("{","");
+        List<String> words = Keyword.getWords(line," ");
+        if(words.size() > 1){
             String name = words.get(1);
             Namespace namespace = new Namespace(name);
             return namespace;

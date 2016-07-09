@@ -33,6 +33,15 @@ public class InterfaceParser {
                     String headerFileName = words[2];
                     interfaceK.HEADER_NAME = headerFileName;
                     break;
+                case CONVERSION_CONSTRUCRTOR:
+                    words = line.split(" ");
+                    String boolStr = words[2];
+                    if(boolStr.equals("true")){
+                         interfaceK.setGenerateConvConst(true);
+                    }else {
+                         interfaceK.setGenerateConvConst(false);
+                    }
+                    break;
                 case FUNCTION_IGNORE_START:
                     mInFunctionIgnore = true;
                     mOutFuntionIgnore = false;
@@ -43,6 +52,12 @@ public class InterfaceParser {
                     break;
                 case FUNCTION_IGNORE:
                     interfaceK.addFunctionToIgnore(line);
+                    break;
+                case RENAME_FUNC:
+                    words = line.split(":");
+                    String fromName = words[1].trim();
+                    String toName = words[2].trim();
+                    interfaceK.addFunctionRename(fromName,toName);
                     break;
                 case IMPORT_START:
                     mInIMPORT = true;
@@ -70,6 +85,11 @@ public class InterfaceParser {
             return InterfaceConstruct.HEADER_FILE;
         }
 
+        //CONVERSION CONSTRUCTOR
+        else if(currentLine.contains(InterfaceKeywords.CONVERSION_CONSTRUCRTOR)){
+            return InterfaceConstruct.CONVERSION_CONSTRUCRTOR;
+        }
+
         //FUNCTION_IGNORE_START
         else if(currentLine.contains(InterfaceKeywords.FUNCTION_IGNORE_START)){
             return InterfaceConstruct.FUNCTION_IGNORE_START;
@@ -83,6 +103,11 @@ public class InterfaceParser {
         //FUNCTION IGNORE
         else if(mInFunctionIgnore && !mOutFuntionIgnore && currentLine.length() > 1){
             return InterfaceConstruct.FUNCTION_IGNORE;
+        }
+
+        //RENAME FUNC
+        else if(currentLine.contains(InterfaceKeywords.RENAME_FUNC)){
+            return InterfaceConstruct.RENAME_FUNC;
         }
 
         //IMPORT START

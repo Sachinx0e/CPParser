@@ -71,7 +71,7 @@ public class Worker {
                     case CONSTRUCTOR:
                         boolean isIgnoredConstructor = interfaceK.isFunctionIgnored(currentLine);
                         if(!isIgnoredConstructor){
-                            Constructor constructor = Constructor.read(currentLine);
+                            Constructor constructor = Constructor.read(currentLine,ast);
                             classK = ast.getClassK();
                             if(classK != null){
                                 classK.addConstructors(constructor);
@@ -85,7 +85,7 @@ public class Worker {
                     case FUNCTION:
                         boolean isIgnoredFunction = interfaceK.isFunctionIgnored(currentLine);
                         if(!isIgnoredFunction){
-                            Function function = Function.read(currentLine);
+                            Function function = Function.read(currentLine,ast);
                             if(ast.getClassK() != null){
                                 ast.getClassK().addFunctions(function);
                             }else {

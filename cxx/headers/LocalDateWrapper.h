@@ -2,6 +2,7 @@
 
 #include <LocalDate.h>
 #include <headers\DurationWrapper.h>
+#include <string_utils>
 
 namespace RewireRuntimeComponent {
    public ref class LocalDate sealed {
@@ -61,6 +62,9 @@ namespace RewireRuntimeComponent {
          bool isValid();
 
          Platform::String^ toString();
+
+      protected private:
+         LocalDate(Applib::DateTime::LocalDate localdate);
 
       private:
          Applib::DateTime::LocalDate mLocalDate;

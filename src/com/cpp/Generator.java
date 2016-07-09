@@ -32,7 +32,7 @@ public class Generator {
         mOutPutDir = outPutDir;
         mHeaderOutPutDir = new File(outPutDir,"headers");
         mHeaderOutPutDir.mkdir();
-        mSourceOutPutDir = new File(outPutDir,"source");
+        mSourceOutPutDir = new File(outPutDir,"sources");
         mSourceOutPutDir.mkdir();
     }
 
@@ -49,6 +49,9 @@ public class Generator {
         for(int i = 0;i<headers.size();i++){
             stringBuilder.append(CXXTemplates.IMPORT.replace("%",headers.get(i))).append("\n");
         }
+        stringBuilder.append(CXXTemplates.IMPORT.replace("%","Pointer.h"));
+        stringBuilder.append("\n\n");
+
         stringBuilder.append("\n");
 
         //namespace for wrappped class
@@ -61,6 +64,9 @@ public class Generator {
 
         //public scope
         stringBuilder.append(CXXTemplates.SPACING_2).append(CppKeywordNames.PUBLIC).append("\n");
+
+        //Pointer constructor
+        stringBuilder.append(CXXTemplates.SPACING_3).append(CXXTemplates.POINTER_CONSTRUCTOR.replace("%class_name",mAST.getClassK().getName())).append("\n\n");
 
         //start adding constructors
         List<Constructor> constructors = mAST.getClassK().getConstructors();
@@ -75,19 +81,19 @@ public class Generator {
         List<Function> functionList = mAST.getClassK().getFunctions();
         for(int i = 0;i<functionList.size();i++){
             Function function = functionList.get(i);
-            if(!function.getName().contains("operator")){
-                String functionStr = CXXTemplates.SPACING_3 + function.generateDeclarations(mGeneratorType) + "\n";
-                stringBuilder.append(functionStr);
-                stringBuilder.append("\n");
-            }
+            String functionStr = CXXTemplates.SPACING_3 + function.generateDeclarations(mInterfaceK,mGeneratorType) + "\n";
+            stringBuilder.append(functionStr);
+            stringBuilder.append("\n");
         }
+
+        //getPointer()
+        stringBuilder.append("Pointer^ getPointer();\n\n");
 
         //private member
         stringBuilder.append(CXXTemplates.SPACING_2).append(CppKeywordNames.PRIVATE).append("\n");
 
         //wrapped class member variable
-        String classAsMemStr = mAST.getClassK().getQualifiedName(mAST) + " " + "m" + mAST.getClassK().getName() + ";";
-        stringBuilder.append(CXXTemplates.SPACING_3).append(classAsMemStr).append("\n\n");
+        stringBuilder.append(CXXTemplates.SPACING_3).append(CXXTemplates.WRAPPED_POINTER.replace("%qualified_name",mAST.getClassK().getQualifiedName(mAST)).replace("%member_name",mAST.getClassK().getWrappedMemberName())).append("\n\n");
 
         //close class
         stringBuilder.append("   };\n");
@@ -110,7 +116,22 @@ public class Generator {
 
         //import statement for wrapped class header
         stringBuilder.append("#include").append(" ").append("<").append("headers\\").append(mInterfaceK.getTranslationUnitHeaderName()).append(">");
+        stringBuilder.append("\n");
+
+        //import string_utils
+        stringBuilder.append(CXXTemplates.IMPORT.replace("%","misc\\StringUtils.h"));
         stringBuilder.append("\n\n");
+
+        //Pointer constructor
+        stringBuilder.append(mNamespace).append("::").append(mAST.getClassK().getName()).append("::").append(CXXTemplates.POINTER_CONSTRUCTOR.replace("%class_name",mAST.getClassK().getName()).replace(";","{")).append("\n");
+
+        stringBuilder.append(CXXTemplates.SPACING_1);
+        stringBuilder.append(CXXTemplates.POINTER_TO_NATIVE_ASSIGNMENT_EXPRESSION.replace("%class_name",mAST.getClassK().getName()).replace("%qualified_name",mAST.getClassK().getQualifiedName(mAST)));
+        stringBuilder.append("\n");
+
+        //pointer constructor body end
+        stringBuilder.append("}\n\n");
+
 
         //start adding constructors
         List<Constructor> constructors = mAST.getClassK().getConstructors();
@@ -120,6 +141,25 @@ public class Generator {
             stringBuilder.append(constructorStr);
             stringBuilder.append("\n");
         }
+
+        //start adding functions
+        List<Function> functions = mAST.getClassK().getFunctions();
+        for(int i = 0;i<functions.size();i++){
+            Function function = functions.get(i);
+            String functionStr = function.generateDefination(mAST,mNamespace,mGeneratorType,mInterfaceK) + "\n";
+            stringBuilder.append(functionStr);
+            stringBuilder.append("\n");
+        }
+
+        //getPointer()
+        stringBuilder.append(CXXTemplates.GET_POINTER_DEFINATION_HEAD.replace("%class_name",mAST.getClassK().getName())).append("\n");
+
+        //getPointer() body
+        stringBuilder.append(CXXTemplates.SPACING_1).append(CXXTemplates.GET_POINTER_BODY.replace("%class_name",mAST.getClassK().getName())).append("\n");
+
+        //close getPointer()
+        stringBuilder.append("}\n\n");
+
 
         System.out.print("  ");
         System.out.print(stringBuilder.toString());

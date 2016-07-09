@@ -10,6 +10,7 @@ public class TypeMappings {
 
     static {
         MAPPINGS.put("std::string","Platform::String^");
+        MAPPINGS.put("string","Platform::String^");
         MAPPINGS.put("int","int32");
         MAPPINGS.put("long","int64");
         MAPPINGS.put("long long","int64");

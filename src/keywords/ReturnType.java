@@ -1,5 +1,8 @@
 package keywords;
 
+import com.cpp.CXXTemplates;
+import com.cpp.TypeMappings;
+
 import java.util.List;
 
 /**
@@ -9,11 +12,13 @@ public class ReturnType extends Keyword {
 
     private final boolean mIsReference;
     private final boolean mIsPointer;
+    private final String mNamespace;
 
-    public ReturnType(String name, boolean isReference, boolean isPointer) {
+    public ReturnType(String name, String namespace, boolean isReference, boolean isPointer) {
         super(name);
         mIsReference = isReference;
         mIsPointer = isPointer;
+        mNamespace = namespace;
     }
 
 
@@ -25,7 +30,11 @@ public class ReturnType extends Keyword {
         return mIsPointer;
     }
 
-    public static ReturnType read(String currentLine){
+    public String getNamespace(){
+        return mNamespace;
+    }
+
+    public static ReturnType read(String currentLine,AST ast){
         List<String> words = Keyword.getWords(currentLine," ");
         boolean isRef;
         boolean isPointer;
@@ -44,7 +53,23 @@ public class ReturnType extends Keyword {
             name = words.get(0);
         }
 
-        ReturnType returnType = new ReturnType(name,isRef,isPointer);
+        List<String> namespaceWords = Keyword.getWords(currentLine,"::");
+        String namespace = null;
+        if(namespaceWords.size() > 1){
+            for(int i = 0;i<namespaceWords.size()-1;i++){
+                if(i == 0){
+                    namespace = namespaceWords.get(i);
+                }
+                else{
+                    namespace = namespace + "::" + namespaceWords.get(i);
+                }
+            }
+            name = namespaceWords.get(namespaceWords.size() - 1);
+        }else {
+            namespace = ast.getNamespace().getQualifiedName();
+        }
+
+        ReturnType returnType = new ReturnType(name,namespace,isRef,isPointer);
         return returnType;
 
     }
@@ -59,5 +84,35 @@ public class ReturnType extends Keyword {
             stringBuilder.append("*");
         }
         return stringBuilder.toString();
+    }
+
+    public String getConversionString(String fromName, String toName) {
+        if(getName().equals("std::string") || getName().equals("string")){
+            String conversionStr = CXXTemplates.STRING_CONVERSION_EXPRESSION.replace("%to_name",toName).replace("%from_name",fromName);
+            return conversionStr;
+        }else if(Character.isUpperCase(getName().charAt(0))) {
+            String conversionStr = CXXTemplates.OBJECT_CONVERSION_EXPRESSION.replace("%to_type",getName()).replace("%to_name",toName).replace("%from_name",fromName);
+            return conversionStr;
+        }else {
+            return getName() + " " + toName + " = " + fromName;
+        }
+    }
+
+    public boolean getIsObject() {
+        if(Character.isUpperCase(getName().charAt(0))){
+            return true;
+        }else {
+            return false;
+        }
+    }
+
+    public String getQualifedName() {
+        if(getIsObject()){
+            return mNamespace + "::" + getName();
+        }else if(getName().equals("string")){
+            return "std::string";
+        } else {
+            return getName();
+        }
     }
 }

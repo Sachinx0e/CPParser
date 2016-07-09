@@ -1,6 +1,7 @@
 package interfaces;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -11,6 +12,8 @@ public class Interface {
 
     private List<String> mFunctionToIgnore = new ArrayList<>();
     private List<String> mImportFiles = new ArrayList<>();
+    private HashMap<String,String> functionToRename = new HashMap<>();
+    private boolean mGenConvConst = false;
 
     public void addFunctionToIgnore(String line) {
         mFunctionToIgnore.add(line);
@@ -44,4 +47,22 @@ public class Interface {
         }
         return false;
     }
+
+    public void setGenerateConvConst(boolean genconvConstr) {
+        mGenConvConst = genconvConstr;
+    }
+
+    public boolean getGenerateConvConst(){
+        return mGenConvConst;
+    }
+
+    public void addFunctionRename(String fromName, String toName) {
+        functionToRename.put(fromName,toName);
+    }
+
+    public String getFunctionRenameMapping(String funcName){
+        String value = functionToRename.getOrDefault(funcName,funcName);
+        return value;
+    }
+
 }

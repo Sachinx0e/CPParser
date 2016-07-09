@@ -1,4 +1,4 @@
-HEADER_FILE : Application.h
+HEADER_FILE : DurationTime.h
 
 FUNCTIONS_IGNORE_START
 
@@ -6,7 +6,5 @@ FUNCTIONS_IGNORE_END
 
 
 IMPORTS_START
-
-headers\ApplicationWrapper.h
 
 IMPORTS_END

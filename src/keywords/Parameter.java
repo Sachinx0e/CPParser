@@ -16,13 +16,15 @@ public class Parameter extends Keyword {
     private final boolean mIsConst;
     private final boolean mIsReference;
     private final boolean mIsPointer;
+    private final String mNamespace;
 
-    public Parameter(boolean isConst, String type, String name,boolean isReference,boolean isPointer) {
+    public Parameter(boolean isConst,String type,String namespace, String name, boolean isReference, boolean isPointer) {
         super(name);
         mType = type;
         mIsConst = isConst;
         mIsReference = isReference;
         mIsPointer = isPointer;
+        mNamespace = namespace;
     }
 
     public String getType() {
@@ -37,7 +39,11 @@ public class Parameter extends Keyword {
         return mIsReference;
     }
 
-    public static List<Parameter> read(String currentLine) {
+    public boolean getIsPointer(){
+        return mIsPointer;
+    }
+
+    public static List<Parameter> read(String currentLine,AST ast) {
         List<Parameter> parameterList = new ArrayList<>();
         int index_bracket_open = currentLine.lastIndexOf("(");
         int index_bracket_close = currentLine.lastIndexOf(")");
@@ -52,27 +58,32 @@ public class Parameter extends Keyword {
                     boolean isConst = false;
 
                     //type and ref
+                    String [] words;
                     String type;
+                    String namespace;
                     boolean isRef;
                     boolean isPointer;
                     if(singleParam.get(0).contains("&")){
-                        type = singleParam.get(0).replace("&","");
+                        words = getNamespace(singleParam.get(0).replace("&",""),ast);
                         isRef = true;
                         isPointer = false;
                     }else if(singleParam.get(0).contains("*")){
-                        type = singleParam.get(0).replace("*","");
-                        isRef = true;
-                        isPointer = false;
+                        words = getNamespace(singleParam.get(0).replace("*",""),ast);
+                        isRef = false;
+                        isPointer = true;
                     }else {
-                        type = singleParam.get(0);
+                        words = getNamespace(singleParam.get(0),ast);
                         isRef = false;
                         isPointer = false;
                     }
 
+                    type = words[0];
+                    namespace = words[1];
+
                     // name
                     String variableName =singleParam.get(1);
 
-                    Parameter parameter = new Parameter(isConst,type,variableName,isRef,isPointer);
+                    Parameter parameter = new Parameter(isConst,type,namespace,variableName,isRef,isPointer);
                     parameterList.add(parameter);
                 }else if(singleParam.size() == 3){
 
@@ -90,22 +101,29 @@ public class Parameter extends Keyword {
                         typeIndex = 0;
                     }
 
+                    String [] words;
                     String type;
+                    String namespace;
+                    String paramStr;
                     boolean isRef;
                     boolean isPointer;
                     if(singleParam.get(typeIndex).contains("&")){
-                        type = singleParam.get(typeIndex).replace("&","");
+                        paramStr = singleParam.get(typeIndex).replace("&","");
                         isRef = true;
                         isPointer = false;
                     }else if(singleParam.get(typeIndex).contains("*")){
-                        type = singleParam.get(typeIndex).replace("*","");
-                        isRef = true;
-                        isPointer = false;
+                        paramStr = singleParam.get(typeIndex).replace("*","");
+                        isRef = false;
+                        isPointer = true;
                     }else {
-                        type = singleParam.get(typeIndex);
+                        paramStr = singleParam.get(typeIndex);
                         isRef = false;
                         isPointer = false;
                     }
+
+                    words = getNamespace(paramStr,ast);
+                    type = words[0];
+                    namespace = words[1];
 
                     //name
                     int nameIndex;
@@ -116,7 +134,7 @@ public class Parameter extends Keyword {
                     }
                     String variableName = singleParam.get(nameIndex);
 
-                    Parameter parameter = new Parameter(isConst,type,variableName,isRef,isPointer);
+                    Parameter parameter = new Parameter(isConst, type,namespace,variableName,isRef,isPointer);
                     parameterList.add(parameter);
                 } else if(singleParam.size() == 4){
                     boolean isConst = true;
@@ -124,27 +142,33 @@ public class Parameter extends Keyword {
                     boolean isPointer;
 
                     //type and ref
+                    String [] words;
                     String type;
+                    String namespace;
+                    String paramStr;
+
                     if(singleParam.get(2).contains("&")){
-                        type = singleParam.get(1) + " " + singleParam.get(2).replace("&","");
+                        paramStr = singleParam.get(1) + " " + singleParam.get(2).replace("&","");
                         isRef = true;
                         isPointer = false;
                     }else if(singleParam.get(2).contains("*")){
-                        type = singleParam.get(1) + " " + singleParam.get(2).replace("*","");
-                        isRef = true;
-                        isPointer = false;
+                        paramStr = singleParam.get(1) + " " + singleParam.get(2).replace("*","");
+                        isRef = false;
+                        isPointer = true;
                     }else {
-                        type = singleParam.get(1) + " " + singleParam.get(2);
+                        paramStr = singleParam.get(1) + " " + singleParam.get(2);
                         isRef = false;
                         isPointer = false;
                     }
 
-
+                    words = getNamespace(paramStr,ast);
+                    type = words[0];
+                    namespace = words[1];
 
                     //name
                     String variableName = singleParam.get(3);
 
-                    Parameter parameter = new Parameter(isConst,type,variableName,isRef,isPointer);
+                    Parameter parameter = new Parameter(isConst, type,namespace,variableName,isRef,isPointer);
                     parameterList.add(parameter);
 
                 }
@@ -169,5 +193,50 @@ public class Parameter extends Keyword {
         }else {
             return null;
         }
+    }
+
+    public boolean getIsObject() {
+        if(Character.isUpperCase(getType().charAt(0))){
+            return true;
+        }else {
+            return false;
+        }
+    }
+
+
+    public boolean getIsString() {
+        if(getType().equals("std::string") || getType().equals("string")){
+            return true;
+        }else {
+            return false;
+        }
+    }
+
+    public static String[] getNamespace(String paramStr,AST ast){
+        String[] words = new String[2];
+        String namespace = null;
+        String name;
+        List<String> namespaceWords = Keyword.getWords(paramStr,"::");
+        if(namespaceWords.size() > 1){
+            for(int i = 0;i<namespaceWords.size()-1;i++){
+                if(i == 0){
+                    namespace = namespaceWords.get(i);
+                }
+                else{
+                    namespace = namespace + "::" + namespaceWords.get(i);
+                }
+            }
+            name = namespaceWords.get(namespaceWords.size() - 1);
+        }else {
+            name = paramStr;
+            namespace = ast.getNamespace().getQualifiedName();
+        }
+        words[0] = name;
+        words[1] = namespace;
+        return words;
+    }
+
+    public CharSequence getQualifiedName() {
+        return mNamespace + "::" + getType();
     }
 }

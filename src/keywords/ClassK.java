@@ -22,8 +22,9 @@ public class ClassK extends Keyword {
 
 
     public static ClassK read(String currentLine) {
-        List<String> words = Keyword.getWords(currentLine," ");
-        if(words.size() >= 2){
+        String line = currentLine.replace("{","");
+        List<String> words = Keyword.getWords(line," ");
+        if(words.size() >= 1){
             String className = words.get(1);
             ClassK classK = new ClassK(className);
             return classK;
@@ -55,5 +56,9 @@ public class ClassK extends Keyword {
     public String getQualifiedName(AST ast) {
         String qualifiedName = ast.getNamespace().getQualifiedName() + "::" + getName();
         return qualifiedName;
+    }
+
+    public String getWrappedMemberName() {
+        return "m" + getName();
     }
 }
