@@ -1,7 +1,6 @@
 package keywords;
 
 import com.cpp.CXXTemplates;
-import com.cpp.TypeMappings;
 
 import java.util.List;
 
@@ -86,12 +85,13 @@ public class ReturnType extends Keyword {
         return stringBuilder.toString();
     }
 
-    public String getConversionString(String fromName, String toName) {
+    public String getConversionString(String fromName, String toName, String memOwn) {
         if(getName().equals("std::string") || getName().equals("string")){
             String conversionStr = CXXTemplates.STRING_CONVERSION_EXPRESSION.replace("%to_name",toName).replace("%from_name",fromName);
             return conversionStr;
         }else if(Character.isUpperCase(getName().charAt(0))) {
-            String conversionStr = CXXTemplates.OBJECT_CONVERSION_EXPRESSION.replace("%to_type",getName()).replace("%to_name",toName).replace("%from_name",fromName);
+            String memoOwnStr = memOwn;
+            String conversionStr = CXXTemplates.OBJECT_CONVERSION_EXPRESSION.replace("%to_type",getName()).replace("%to_name",toName).replace("%from_name",fromName).replace("%mem_own",memoOwnStr);
             return conversionStr;
         }else {
             return getName() + " " + toName + " = " + fromName;

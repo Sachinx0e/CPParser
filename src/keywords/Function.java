@@ -17,14 +17,16 @@ public class Function extends Keyword {
     private List<Parameter> mParamaters;
     private boolean mIsStatic;
     private ReturnType mReturnType;
+    private String mReadLine;
 
 
-    public Function(boolean isVirtual, boolean isStatic, ReturnType returnType, String functionName, List<Parameter> parameters) {
+    public Function(boolean isVirtual, boolean isStatic, ReturnType returnType, String functionName, List<Parameter> parameters,String readLine) {
         super(functionName);
         mIsStatic = isStatic;
         mReturnType = returnType;
         mParamaters = parameters;
         mIsVirtual = isVirtual;
+        mReadLine = readLine;
     }
 
     @Override
@@ -97,7 +99,7 @@ public class Function extends Keyword {
 
             List<Parameter> parameters = Parameter.read(currentLine,ast);
 
-            Function function = new Function(isVirtual,isStatic,returnType,functionName,parameters);
+            Function function = new Function(isVirtual,isStatic,returnType,functionName,parameters,currentLine);
             return function;
 
         }else {
@@ -229,9 +231,10 @@ public class Function extends Keyword {
                     }
 
                     //convert return value
-                    conversionStr = mReturnType.getConversionString("pointer","convertedValue");
+                    String memOwn = interfaceK.getMemOwnStr(getReadLine());
+                    conversionStr = mReturnType.getConversionString("pointer","convertedValue",memOwn);
                 }else {
-                    conversionStr = mReturnType.getConversionString("returnValue","convertedValue") + ";";
+                    conversionStr = mReturnType.getConversionString("returnValue","convertedValue",null) + ";";
                 }
 
                 stringBuilder.append(CXXTemplates.SPACING_1).append(conversionStr).append("\n");
@@ -253,5 +256,9 @@ public class Function extends Keyword {
         }else {
             return null;
         }
+    }
+
+    private String getReadLine() {
+        return mReadLine;
     }
 }

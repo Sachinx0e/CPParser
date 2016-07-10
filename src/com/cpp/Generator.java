@@ -66,7 +66,7 @@ public class Generator {
         stringBuilder.append(CXXTemplates.SPACING_2).append(CppKeywordNames.PUBLIC).append("\n");
 
         //Pointer constructor
-        stringBuilder.append(CXXTemplates.SPACING_3).append(CXXTemplates.POINTER_CONSTRUCTOR.replace("%class_name",mAST.getClassK().getName())).append("\n\n");
+        stringBuilder.append(CXXTemplates.SPACING_3).append(CXXTemplates.POINTER_CONSTRUCTOR_DECLARATION.replace("%class_name",mAST.getClassK().getName())).append("\n\n");
 
         //start adding constructors
         List<Constructor> constructors = mAST.getClassK().getConstructors();
@@ -87,13 +87,19 @@ public class Generator {
         }
 
         //getPointer()
-        stringBuilder.append("Pointer^ getPointer();\n\n");
+        stringBuilder.append(CXXTemplates.SPACING_3).append("Pointer^ getPointer();\n\n");
 
         //private member
         stringBuilder.append(CXXTemplates.SPACING_2).append(CppKeywordNames.PRIVATE).append("\n");
 
         //wrapped class member variable
         stringBuilder.append(CXXTemplates.SPACING_3).append(CXXTemplates.WRAPPED_POINTER.replace("%qualified_name",mAST.getClassK().getQualifiedName(mAST)).replace("%member_name",mAST.getClassK().getWrappedMemberName())).append("\n\n");
+
+        //mem own flag
+        stringBuilder.append(CXXTemplates.SPACING_3).append("bool mMemOwn = true;").append("\n\n");
+
+        //destructor
+        stringBuilder.append(CXXTemplates.SPACING_3).append(CXXTemplates.DESTRUCTOR_DECLATATION.replace("%class_name",mAST.getClassK().getName())).append("\n");
 
         //close class
         stringBuilder.append("   };\n");
@@ -123,14 +129,10 @@ public class Generator {
         stringBuilder.append("\n\n");
 
         //Pointer constructor
-        stringBuilder.append(mNamespace).append("::").append(mAST.getClassK().getName()).append("::").append(CXXTemplates.POINTER_CONSTRUCTOR.replace("%class_name",mAST.getClassK().getName()).replace(";","{")).append("\n");
-
-        stringBuilder.append(CXXTemplates.SPACING_1);
-        stringBuilder.append(CXXTemplates.POINTER_TO_NATIVE_ASSIGNMENT_EXPRESSION.replace("%class_name",mAST.getClassK().getName()).replace("%qualified_name",mAST.getClassK().getQualifiedName(mAST)));
-        stringBuilder.append("\n");
+        stringBuilder.append(CXXTemplates.POINTER_CONSTRUCTOR_DEFINATION.replace("%class_name",mAST.getClassK().getName()).replace("%qualified_name",mAST.getClassK().getQualifiedName(mAST)));
 
         //pointer constructor body end
-        stringBuilder.append("}\n\n");
+        stringBuilder.append("\n\n");
 
 
         //start adding constructors
@@ -160,6 +162,8 @@ public class Generator {
         //close getPointer()
         stringBuilder.append("}\n\n");
 
+        //destructor body
+        stringBuilder.append(CXXTemplates.DESTRUCTOR_DEFINATION.replace("%class_name",mAST.getClassK().getName()));
 
         System.out.print("  ");
         System.out.print(stringBuilder.toString());

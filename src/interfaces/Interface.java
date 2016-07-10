@@ -13,6 +13,8 @@ public class Interface {
     private List<String> mFunctionToIgnore = new ArrayList<>();
     private List<String> mImportFiles = new ArrayList<>();
     private HashMap<String,String> functionToRename = new HashMap<>();
+    private HashMap<String,Boolean> memOwnMap = new HashMap<>();
+
     private boolean mGenConvConst = false;
 
     public void addFunctionToIgnore(String line) {
@@ -63,6 +65,19 @@ public class Interface {
     public String getFunctionRenameMapping(String funcName){
         String value = functionToRename.getOrDefault(funcName,funcName);
         return value;
+    }
+
+    public String getMemOwnStr(String line) {
+        boolean memOwn = memOwnMap.getOrDefault(line,true);
+        if(memOwn){
+            return "true";
+        }else {
+            return "false";
+        }
+    }
+
+    public void setMemOwn(String line,boolean memOwn){
+        memOwnMap.put(line,memOwn);
     }
 
 }
