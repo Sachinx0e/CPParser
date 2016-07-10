@@ -96,7 +96,12 @@ public class Constructor extends Keyword {
                     paramName = CXXTemplates.POINTER_TO_NATIVE_CAST.replace("%qualified_name",parameter.getQualifiedName()).replace("%variable",parameter.getName());
                 }else if(parameter.getIsString()){
                     paramName = CXXTemplates.STRING_CONV_FUNC_PLATFORM_TO_STD.replace("%from_name",parameter.getName());
-                }else {
+                }else if(parameter.getIsListString()){
+                    paramName = CXXTemplates.STRING_LIST_CONV_PLATFORM_TO_STD.replace("%from_name",parameter.getName());
+                } else if(parameter.getIsListInt()){
+                    paramName = CXXTemplates.INT_LIST_CONV_PLATFORM_TO_STD.replace("%from_name",parameter.getName());
+                }
+                else {
                     paramName = parameter.getName();
                 }
                 stringBuilder.append(paramName);

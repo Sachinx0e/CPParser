@@ -1,9 +1,6 @@
 package interfaces;
 
-import keywords.Keyword;
-
 import java.io.*;
-import java.util.List;
 
 /**
  * Created by Rando on 7/8/2016.
@@ -52,9 +49,13 @@ public class InterfaceParser {
                     String toName = words[2].trim();
                     interfaceK.addFunctionRename(fromName,toName);
                     break;
-                case IMPORT:
+                case IMPORT_HEADER:
                     words = line.split(":=");
-                    interfaceK.addImportFile(words[1].trim());
+                    interfaceK.addImportFileHeader(words[1].trim());
+                    break;
+                case IMPORT_SOURCE:
+                    words = line.split(":=");
+                    interfaceK.addImportFileSource(words[1].trim());
                     break;
                 default:
                     break;
@@ -86,9 +87,14 @@ public class InterfaceParser {
             return InterfaceConstruct.RENAME_FUNC;
         }
 
-        //IMPORT
-        else if(currentLine.contains(InterfaceKeywords.IMPORT)){
-            return InterfaceConstruct.IMPORT;
+        //IMPORT_HEADER
+        else if(currentLine.contains(InterfaceKeywords.IMPORT_HEADER)){
+            return InterfaceConstruct.IMPORT_HEADER;
+        }
+
+        //IMPORT SOURCE
+        else if(currentLine.contains(InterfaceKeywords.IMPORT_SOURCE)){
+            return InterfaceConstruct.IMPORT_SOURCE;
         }
 
         //UNKNOWN

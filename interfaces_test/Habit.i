@@ -1,4 +1,4 @@
-HEADER_FILE := LocalDate.h
+HEADER_FILE := habits\Habit.h
 
 CONSTRUCTOR_IGNORE := LocalDate(const LocalDate& date);
 CONSTRUCTOR_IGNORE := LocalDate(long millis);
@@ -19,6 +19,9 @@ RENAME_FUNC : operator== : equals
 RENAME_FUNC : operator> : isAfter
 RENAME_FUNC : operator< : isBefore
 
-IMPORT_HEADER := headers\DurationDateWrapper.h
+IMPORT_HEADER := headers\LocalDateWrapper.h
+IMPORT_HEADER := headers\LocalTimeWrapper.h
+IMPORT_HEADER := headers\ContentValuesWrapper.h
 
+IMPORT_SOURCE := IntUtils.h
 IMPORT_SOURCE := StringUtils.h

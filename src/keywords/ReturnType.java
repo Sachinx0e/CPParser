@@ -105,6 +105,9 @@ public class ReturnType extends Keyword {
         }else if(getName().equals("std::vector<std::string>") || getName().equals("std::vector<string>")){
             String conversionStr = CXXTemplates.NATIVE__STRING_LIST_TO_PLATFORM__STRING_LIST.replace("%from_value",fromName).replace("%to_value",toName);
             return conversionStr;
+        }else if(getName().equals("std::vector<int>")){
+            String conversionStr = CXXTemplates.NATIVE_INT_LIST_TO_PLATFORM_INT_LIST.replace("%from_value",fromName).replace("%to_value",toName);
+            return conversionStr;
         }
         else if(Character.isUpperCase(getName().charAt(0))) {
             String memoOwnStr = memOwn;

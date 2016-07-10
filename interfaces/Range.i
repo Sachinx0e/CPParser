@@ -1,4 +1,4 @@
 HEADER_FILE := Range.h
 
-IMPORT := headers\LocalDateWrapper.h
+IMPORT_HEADER := headers\LocalDateWrapper.h
 

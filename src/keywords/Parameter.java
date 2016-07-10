@@ -212,6 +212,22 @@ public class Parameter extends Keyword {
         }
     }
 
+    public boolean getIsListString() {
+        if(getQualifiedName().equals("std::vector<std::string>") || getQualifiedName().equals("std::vector<string>")){
+            return true;
+        }else {
+            return false;
+        }
+    }
+
+    public boolean getIsListInt() {
+        if(getQualifiedName().equals("std::vector<int>")){
+            return true;
+        }else {
+            return false;
+        }
+    }
+
     public static String[] getNamespace(String paramStr,AST ast){
         String[] words = new String[2];
         String namespace = null;
@@ -239,4 +255,5 @@ public class Parameter extends Keyword {
     public CharSequence getQualifiedName() {
         return mNamespace + "::" + getType();
     }
+
 }

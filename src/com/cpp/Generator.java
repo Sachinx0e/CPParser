@@ -45,7 +45,7 @@ public class Generator {
 
         //import statement for wrapped class header
         stringBuilder.append(CXXTemplates.IMPORT.replace("%",mInterfaceK.getFullHeaderName())).append("\n");
-        List<String> headers = mInterfaceK.getImportFiles();
+        List<String> headers = mInterfaceK.getImportFilesHeader();
         for(int i = 0;i<headers.size();i++){
             stringBuilder.append(CXXTemplates.IMPORT.replace("%",headers.get(i))).append("\n");
         }
@@ -124,8 +124,11 @@ public class Generator {
         stringBuilder.append("#include").append(" ").append("<").append("headers\\").append(mInterfaceK.getTranslationUnitHeaderName()).append(">");
         stringBuilder.append("\n");
 
-        //import string_utils
-        stringBuilder.append(CXXTemplates.IMPORT.replace("%","misc\\StringUtils.h"));
+        //import for source files
+        List<String> headers = mInterfaceK.getImportFilesSource();
+        for(int i = 0;i<headers.size();i++){
+            stringBuilder.append(CXXTemplates.IMPORT.replace("%",headers.get(i))).append("\n");
+        }
         stringBuilder.append("\n\n");
 
         //Pointer constructor

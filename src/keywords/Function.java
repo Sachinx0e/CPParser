@@ -198,13 +198,17 @@ public class Function extends Keyword {
                 if(parameter.getIsObject()){
                     String dereference;
                     if(parameter.getIsPointer()){
-                        dereference = "";
+                        dereference = "&";
                     }else {
-                        dereference = "*";
+                        dereference = "";
                     }
-                    functionCallStrBuilder.append(dereference).append(CXXTemplates.WRAPPED_OBJECT.replace("%param_name",parameter.getName()).replace("%class_name",parameter.getType()));
+                    functionCallStrBuilder.append(dereference).append(CXXTemplates.WRAPPED_OBJECT.replace("%param_name",parameter.getName()).replace("%qualified_name",parameter.getQualifiedName()));
                 }else if(parameter.getIsString()){
                     functionCallStrBuilder.append(CXXTemplates.STRING_CONV_FUNC_PLATFORM_TO_STD.replace("%from_name",parameter.getName()));
+                }else if(parameter.getIsListString()){
+                    functionCallStrBuilder.append(CXXTemplates.STRING_LIST_CONV_PLATFORM_TO_STD.replace("%from_name",parameter.getName()));
+                } else if(parameter.getIsListInt()){
+                    functionCallStrBuilder.append(CXXTemplates.INT_LIST_CONV_PLATFORM_TO_STD.replace("%from_name",parameter.getName()));
                 }
                 else{
                     functionCallStrBuilder.append(parameter.getName());
@@ -218,7 +222,11 @@ public class Function extends Keyword {
 
             //check if return type is void
             if(!mReturnType.getName().equals(CppKeywordNames.VOID)){
-                stringBuilder.append(CXXTemplates.SPACING_1).append(mReturnType.getQualifedName()).append(" ").append("returnValue").append(" = ");
+                stringBuilder.append(CXXTemplates.SPACING_1).append(mReturnType.getQualifedName());
+                if(mReturnType.isPointer()){
+                    stringBuilder.append("*");
+                }
+                stringBuilder.append(" ").append("returnValue").append(" = ");
                 stringBuilder.append(functionCallStrBuilder.toString());
                 String conversionStr;
                 if(mReturnType.getIsObject()){
@@ -228,6 +236,7 @@ public class Function extends Keyword {
                         stringBuilder.append("\n");
                     }else {
                         stringBuilder.append(CXXTemplates.SPACING_1).append(CXXTemplates.NATIVE_POINTER_TO_POINTER_ASSIGNMENT_EXPRESSION.replace("%value","returnValue"));
+                        stringBuilder.append("\n");
                     }
 
                     //convert return value

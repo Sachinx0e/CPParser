@@ -11,7 +11,8 @@ public class Interface {
     private String mHeaderName;
 
     private List<String> mFunctionToIgnore = new ArrayList<>();
-    private List<String> mImportFiles = new ArrayList<>();
+    private List<String> mImportFilesHeader = new ArrayList<>();
+    private List<String> mImportFilesSource = new ArrayList<>();
     private List<String> mConstructorsToIgnore = new ArrayList<>();
     private HashMap<String,String> functionToRename = new HashMap<>();
     private HashMap<String,Boolean> memOwnMap = new HashMap<>();
@@ -23,14 +24,21 @@ public class Interface {
     }
 
 
-    public void addImportFile(String importFile) {
-        mImportFiles.add(importFile);
+    public void addImportFileHeader(String importFile) {
+        mImportFilesHeader.add(importFile);
     }
 
-    public List<String> getImportFiles(){
-        return mImportFiles;
+    public List<String> getImportFilesHeader(){
+        return mImportFilesHeader;
     }
 
+    public void addImportFileSource(String importFile) {
+        mImportFilesSource.add(importFile);
+    }
+
+    public List<String> getImportFilesSource(){
+        return mImportFilesSource;
+    }
 
     public String getTranslationUnitHeaderName() {
         return mHeaderName.replace(".h","") + "Wrapper.h";
@@ -104,6 +112,7 @@ public class Interface {
     public void addConstructorsToIgnore(String constructorLine) {
         mConstructorsToIgnore.add(constructorLine);
     }
+
 
 
 }
