@@ -1,13 +1,4 @@
-HEADER_FILE : DurationDate.h
-CONVERSION_CONSTRUCTOR : true
+HEADER_FILE := DurationDate.h
 
-FUNCTIONS_IGNORE_START
+CONSTRUCTOR_IGNORE := DurationDate(date startDate, date endDate);
 
-DurationDate(date startDate, date endDate);
-
-FUNCTIONS_IGNORE_END
-
-
-IMPORTS_START
-
-IMPORTS_END

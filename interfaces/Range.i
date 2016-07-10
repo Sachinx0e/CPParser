@@ -1,11 +1,4 @@
-HEADER_FILE : Range.h
+HEADER_FILE := Range.h
 
-FUNCTIONS_IGNORE_START
+IMPORT := headers\LocalDateWrapper.h
 
-FUNCTIONS_IGNORE_END
-
-IMPORTS_START
-
-headers\LocalDateWrapper.h
-
-IMPORTS_END

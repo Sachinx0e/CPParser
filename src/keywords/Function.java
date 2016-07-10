@@ -204,7 +204,7 @@ public class Function extends Keyword {
                     }
                     functionCallStrBuilder.append(dereference).append(CXXTemplates.WRAPPED_OBJECT.replace("%param_name",parameter.getName()).replace("%class_name",parameter.getType()));
                 }else if(parameter.getIsString()){
-
+                    functionCallStrBuilder.append(CXXTemplates.STRING_CONV_FUNC_PLATFORM_TO_STD.replace("%from_name",parameter.getName()));
                 }
                 else{
                     functionCallStrBuilder.append(parameter.getName());

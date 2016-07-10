@@ -69,7 +69,7 @@ public class Worker {
                         }
                         break;
                     case CONSTRUCTOR:
-                        boolean isIgnoredConstructor = interfaceK.isFunctionIgnored(currentLine);
+                        boolean isIgnoredConstructor = interfaceK.isConstructorIgnored(currentLine);
                         if(!isIgnoredConstructor){
                             Constructor constructor = Constructor.read(currentLine,ast);
                             classK = ast.getClassK();

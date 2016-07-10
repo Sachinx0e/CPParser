@@ -16,7 +16,7 @@ public class Main {
         Thread.currentThread().setUncaughtExceptionHandler(exceptionHandler);
 
         String namespace = "RewireRuntimeComponent";
-        File dir = new File("interfaces_test");
+        File dir = new File("interfaces");
         File[] interfaceFiles = dir.listFiles((dir1, name) -> {
             System.out.println(name);
             return name.toLowerCase().endsWith(".i");

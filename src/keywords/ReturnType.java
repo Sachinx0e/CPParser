@@ -52,7 +52,15 @@ public class ReturnType extends Keyword {
             name = words.get(0);
         }
 
-        List<String> namespaceWords = Keyword.getWords(currentLine,"::");
+        String namespaceExtractionStr;
+        if(currentLine.contains("<") && currentLine.contains(">") ){
+            List<String> wordsNamespace = Keyword.getWords(currentLine.replace("<"," ").replace(">"," ")," ");
+            namespaceExtractionStr = wordsNamespace.get(1);
+        }else {
+            namespaceExtractionStr = currentLine;
+        }
+
+        List<String> namespaceWords = Keyword.getWords(namespaceExtractionStr,"::");
         String namespace = null;
         if(namespaceWords.size() > 1){
             for(int i = 0;i<namespaceWords.size()-1;i++){
@@ -63,7 +71,12 @@ public class ReturnType extends Keyword {
                     namespace = namespace + "::" + namespaceWords.get(i);
                 }
             }
-            name = namespaceWords.get(namespaceWords.size() - 1).replace("*","").replace("&","");
+            if(currentLine.contains("<") && currentLine.contains(">")){
+                name = currentLine.trim();
+            }else {
+                name = namespaceWords.get(namespaceWords.size() - 1).replace("*","").replace("&","");
+            }
+
         }else {
             namespace = ast.getNamespace().getQualifiedName();
         }
@@ -89,7 +102,11 @@ public class ReturnType extends Keyword {
         if(getName().equals("std::string") || getName().equals("string")){
             String conversionStr = CXXTemplates.STRING_CONVERSION_EXPRESSION.replace("%to_name",toName).replace("%from_name",fromName);
             return conversionStr;
-        }else if(Character.isUpperCase(getName().charAt(0))) {
+        }else if(getName().equals("std::vector<std::string>") || getName().equals("std::vector<string>")){
+            String conversionStr = CXXTemplates.NATIVE__STRING_LIST_TO_PLATFORM__STRING_LIST.replace("%from_value",fromName).replace("%to_value",toName);
+            return conversionStr;
+        }
+        else if(Character.isUpperCase(getName().charAt(0))) {
             String memoOwnStr = memOwn;
             String conversionStr = CXXTemplates.OBJECT_CONVERSION_EXPRESSION.replace("%to_type",getName()).replace("%to_name",toName).replace("%from_name",fromName).replace("%mem_own",memoOwnStr);
             return conversionStr;

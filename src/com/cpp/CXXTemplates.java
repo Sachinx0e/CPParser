@@ -39,4 +39,6 @@ public class CXXTemplates {
     public static final String WRAPPED_OBJECT = "%param_name->m%class_name";
     public static final String WRAPPED_POINTER = "%qualified_name* %member_name = NULL;";
 
+    public static final String NATIVE__STRING_LIST_TO_PLATFORM__STRING_LIST = "Platform::Collections::Vector<Platform::String^>^ %to_value = string_utils::to_platform_list(%from_value);";
+
 }

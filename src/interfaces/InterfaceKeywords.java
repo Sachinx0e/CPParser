@@ -5,10 +5,8 @@ package interfaces;
  */
 public class InterfaceKeywords {
     public static final String HEADER_FILE = "HEADER_FILE";
-    public static final String CONVERSION_CONSTRUCRTOR = "CONVERSION_CONSTRUCTOR";
-    public static final CharSequence FUNCTION_IGNORE_START = "FUNCTIONS_IGNORE_START";
-    public static final CharSequence FUNCTION_IGNORE_END = "FUNCTIONS_IGNORE_END";
-    public static final CharSequence IMPORT_START = "IMPORTS_START";
-    public static final CharSequence IMPORT_END = "IMPORTS_END";
     public static final CharSequence RENAME_FUNC = "RENAME_FUNC";
+    public static final CharSequence FUNCTION_IGNORE = "FUNCTION_IGNORE";
+    public static final CharSequence IMPORT = "IMPORT";
+    public static final CharSequence CONSTRUCTOR_IGNORE = "CONSTRUCTOR_IGNORE";
 }

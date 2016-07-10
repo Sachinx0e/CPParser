@@ -12,19 +12,16 @@ public class Interface {
 
     private List<String> mFunctionToIgnore = new ArrayList<>();
     private List<String> mImportFiles = new ArrayList<>();
+    private List<String> mConstructorsToIgnore = new ArrayList<>();
     private HashMap<String,String> functionToRename = new HashMap<>();
     private HashMap<String,Boolean> memOwnMap = new HashMap<>();
 
-    private boolean mGenConvConst = false;
     private String mHeaderDirName = "";
 
     public void addFunctionToIgnore(String line) {
         mFunctionToIgnore.add(line);
     }
 
-    public List<String> getFunctionToIgnore(){
-        return mFunctionToIgnore;
-    }
 
     public void addImportFile(String importFile) {
         mImportFiles.add(importFile);
@@ -52,12 +49,13 @@ public class Interface {
         return false;
     }
 
-    public void setGenerateConvConst(boolean genconvConstr) {
-        mGenConvConst = genconvConstr;
-    }
-
-    public boolean getGenerateConvConst(){
-        return mGenConvConst;
+    public boolean isConstructorIgnored(String currentLine) {
+        for(String function : mConstructorsToIgnore){
+            if(currentLine.equals(function)){
+                return true;
+            }
+        }
+        return false;
     }
 
     public void addFunctionRename(String fromName, String toName) {
@@ -102,4 +100,10 @@ public class Interface {
             return mHeaderDirName + "\\" + mHeaderName;
         }
     }
+
+    public void addConstructorsToIgnore(String constructorLine) {
+        mConstructorsToIgnore.add(constructorLine);
+    }
+
+
 }
