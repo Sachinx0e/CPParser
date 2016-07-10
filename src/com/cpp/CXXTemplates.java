@@ -10,7 +10,7 @@ public class CXXTemplates {
     public static final String OBJECT_CONVERSION_BODY = "m%memberName = %paramName;";
     public static final String POINTER_CONSTRUCTOR = "%class_name(Pointer^ pointer);";
     public static final String POINTER_TO_NATIVE_ASSIGNMENT_EXPRESSION = "m%class_name = (%qualified_name*)pointer->getAddress();";
-    public static String POINTER_TO_NATIVE_CAST = "*((%qualified_name*)%variable->getPointer())";
+    public static String POINTER_TO_NATIVE_CAST = "*((%qualified_name*)%variable->getPointer()->getAddress())";
     public static final String NATIVE_OBJ_TO_POINTER_ASSIGNMENT_EXPRESSION = "Pointer^ pointer = ref new Pointer((__int64)new %qualified_name(%value));";
     public static final String NATIVE_POINTER_TO_POINTER_ASSIGNMENT_EXPRESSION = "Pointer^ pointer = ref new Pointer((__int64)%value);";
     public static final String GET_POINTER_DEFINATION_HEAD = "RewireRuntimeComponent::Pointer^ RewireRuntimeComponent::%class_name::getPointer(){";
