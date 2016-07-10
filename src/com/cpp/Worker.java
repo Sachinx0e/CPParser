@@ -29,9 +29,9 @@ public class Worker {
 
         //read the file
         AST ast = new AST();
-        File headerFile = HeaderStore.findHeader(interfaceK.HEADER_NAME);
+        File headerFile = HeaderStore.findHeader(interfaceK.getHeaderName(),interfaceK.getHeaderDirName());
         if(headerFile == null){
-            throw new FileNotFoundException("Could not find " + interfaceK.HEADER_NAME);
+            throw new FileNotFoundException("Could not find " + interfaceK.getFullHeaderName());
         }
         BufferedReader bufferedReader = new BufferedReader(new FileReader(headerFile));
         currentLine = null;

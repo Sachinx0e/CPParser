@@ -31,7 +31,13 @@ public class InterfaceParser {
                 case HEADER_FILE:
                     String [] words = line.split(" ");
                     String headerFileName = words[2];
-                    interfaceK.HEADER_NAME = headerFileName;
+                    if(headerFileName.contains("\\")){
+                        String directoryName = headerFileName.substring(0,headerFileName.lastIndexOf("\\"));
+                        String headerName = headerFileName.substring(headerFileName.lastIndexOf("\\") + 1,headerFileName.length());
+                        interfaceK.setHeaderFileName(headerName,directoryName);
+                    }else {
+                        interfaceK.setHeaderFileName(headerFileName,"");
+                    }
                     break;
                 case CONVERSION_CONSTRUCRTOR:
                     words = line.split(" ");

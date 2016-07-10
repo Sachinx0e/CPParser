@@ -44,7 +44,7 @@ public class Generator {
         stringBuilder.append("#pragma once").append("\n\n");
 
         //import statement for wrapped class header
-        stringBuilder.append(CXXTemplates.IMPORT.replace("%",mInterfaceK.HEADER_NAME)).append("\n");
+        stringBuilder.append(CXXTemplates.IMPORT.replace("%",mInterfaceK.getFullHeaderName())).append("\n");
         List<String> headers = mInterfaceK.getImportFiles();
         for(int i = 0;i<headers.size();i++){
             stringBuilder.append(CXXTemplates.IMPORT.replace("%",headers.get(i))).append("\n");

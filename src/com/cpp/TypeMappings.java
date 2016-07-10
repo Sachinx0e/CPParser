@@ -16,6 +16,8 @@ public class TypeMappings {
         MAPPINGS.put("long long","int64");
         MAPPINGS.put("bool","bool");
         MAPPINGS.put("short","int16");
+        MAPPINGS.put("float","float32");
+        MAPPINGS.put("double","float64");
     }
 
     public static String getMapping(String type){

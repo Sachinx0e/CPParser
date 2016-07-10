@@ -8,7 +8,7 @@ import java.util.List;
  * Created by Rando on 7/8/2016.
  */
 public class Interface {
-    public String HEADER_NAME;
+    private String mHeaderName;
 
     private List<String> mFunctionToIgnore = new ArrayList<>();
     private List<String> mImportFiles = new ArrayList<>();
@@ -16,6 +16,7 @@ public class Interface {
     private HashMap<String,Boolean> memOwnMap = new HashMap<>();
 
     private boolean mGenConvConst = false;
+    private String mHeaderDirName = "";
 
     public void addFunctionToIgnore(String line) {
         mFunctionToIgnore.add(line);
@@ -33,12 +34,13 @@ public class Interface {
         return mImportFiles;
     }
 
+
     public String getTranslationUnitHeaderName() {
-        return HEADER_NAME.replace(".h","") + "Wrapper.h";
+        return mHeaderName.replace(".h","") + "Wrapper.h";
     }
 
     public String getTranslationUnitSourceName() {
-        return HEADER_NAME.replace(".h","") + "Wrapper.cpp";
+        return mHeaderName.replace(".h","") + "Wrapper.cpp";
     }
 
     public boolean isFunctionIgnored(String currentLine) {
@@ -80,4 +82,24 @@ public class Interface {
         memOwnMap.put(line,memOwn);
     }
 
+    public void setHeaderFileName(String headerFileName, String dirName) {
+        mHeaderName = headerFileName;
+        mHeaderDirName = dirName;
+    }
+
+    public String getHeaderName(){
+        return mHeaderName;
+    }
+
+    public String getHeaderDirName(){
+        return mHeaderDirName;
+    }
+
+    public String getFullHeaderName() {
+        if(mHeaderDirName.equals("")){
+            return mHeaderName;
+        }else {
+            return mHeaderDirName + "\\" + mHeaderName;
+        }
+    }
 }

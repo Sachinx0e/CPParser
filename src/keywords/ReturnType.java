@@ -63,7 +63,7 @@ public class ReturnType extends Keyword {
                     namespace = namespace + "::" + namespaceWords.get(i);
                 }
             }
-            name = namespaceWords.get(namespaceWords.size() - 1);
+            name = namespaceWords.get(namespaceWords.size() - 1).replace("*","").replace("&","");
         }else {
             namespace = ast.getNamespace().getQualifiedName();
         }

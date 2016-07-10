@@ -51,9 +51,14 @@ public class CppParser {
                 else if(isHeader && !currentLine.contains("~") &&
                         currentLine.contains("(") &&
                         currentLine.contains(")") &&
-                        currentLine.contains(";") &&
-                        !currentLine.contains(CppKeywordNames.CONST)){
-                    return LanguageContruct.FUNCTION;
+                        currentLine.contains(";")){
+
+                    if(words.get(0).equals(CppKeywordNames.CONST) || words.get(words.size() - 1).equals(CppKeywordNames.CONST)){
+                         return LanguageContruct.UNKNOWN;
+                    }else {
+                        return LanguageContruct.FUNCTION;
+                    }
+
                 }
 
                 //variable
