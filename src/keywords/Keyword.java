@@ -21,6 +21,7 @@ public abstract class Keyword {
         String [] words = currentLine.split(seperator);
         List<String> wordsList = new ArrayList<>();
         for(String word : words){
+            word = word.trim();
             if(!word.equals("")){
                 wordsList.add(word);
             }

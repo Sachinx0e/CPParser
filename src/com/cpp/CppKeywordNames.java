@@ -10,6 +10,8 @@ public class CppKeywordNames {
     public static final String PUBLIC = "public:";
     public static final String VIRTUAL = "virtual";
     public static final String PROTECTED_PRIVATE = "protected private:" ;
+    public static final String FUNCTION_TAG = "/*F*/";
+    public static final String TEMPLATE = "template <";
     public static String NAMESPACE = "namespace";
     public static String CLASS = "class";
     public static String FUNCTION = "function";

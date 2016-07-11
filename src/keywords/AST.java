@@ -15,6 +15,8 @@ public class AST {
     private ClassK mClass = null;
     private boolean mHasReachedPrivate;
     private ClassK mParentClassK = null;
+    private List<String> mTemplateParamsChild;
+    private List<String> mTemplateParamsParent;
 
     public Namespace getNamespace(){
         return mNamespace;
@@ -72,6 +74,22 @@ public class AST {
 
     public ClassK getParentClassK(){
         return mParentClassK;
+    }
+
+    public void setTemplateParamsChild(List<String> templateParams) {
+        mTemplateParamsChild = templateParams;
+    }
+
+    public void setTemplateParamsParent(List<String> templateParams) {
+        mTemplateParamsParent = templateParams;
+    }
+
+    public List<String> getTemplateParamsChild() {
+        return mTemplateParamsChild;
+    }
+
+    public List<String> getTemplateParamsParent() {
+        return mTemplateParamsParent;
     }
 
 }

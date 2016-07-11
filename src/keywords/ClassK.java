@@ -63,4 +63,12 @@ public class ClassK extends Keyword {
     public String getWrappedMemberName() {
         return "m" + getName();
     }
+
+    public static List<String> readTemplateParams(String currentLine) {
+        int brackStart = currentLine.indexOf("<");
+        int bracketEnd = currentLine.lastIndexOf(">");
+        String templateStr = currentLine.substring(brackStart + 1,bracketEnd);
+        List<String> words = Keyword.getWords(templateStr,",");
+        return words;
+    }
 }

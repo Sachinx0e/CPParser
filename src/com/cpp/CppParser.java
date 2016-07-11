@@ -9,7 +9,7 @@ import java.util.List;
  * Created by Rando on 6/28/2016.
  */
 public class CppParser {
-    public static LanguageContruct getConstruct(String currentLine, AST ast,boolean isHeader) {
+    public static LanguageContruct getConstruct(String currentLine, AST ast) {
         List<String> words = Keyword.getWords(currentLine," ");
         try{
             if(words.size() > 0){
@@ -51,7 +51,7 @@ public class CppParser {
                 }
 
                 //is function
-                else if(isHeader && !currentLine.contains("~") &&
+                else if(!currentLine.contains("~") &&
                         currentLine.contains("(") &&
                         currentLine.contains(")") &&
                         currentLine.contains(";")){
@@ -83,5 +83,39 @@ public class CppParser {
             return LanguageContruct.UNKNOWN;
         }
 
+    }
+
+    public static LanguageContruct getConstructForTemplated(String currentLine, AST ast) {
+        List<String> words = Keyword.getWords(currentLine," ");
+        try{
+            if(words.size() > 0){
+
+                //template
+                if(currentLine.contains(CppKeywordNames.TEMPLATE)){
+                    return LanguageContruct.TEMPLATE;
+                }
+
+                //function
+                else if(currentLine.contains(CppKeywordNames.FUNCTION_TAG)){
+                    if(words.get(0).equals(CppKeywordNames.CONST) || words.get(words.size() - 1).equals(CppKeywordNames.CONST + ";")){
+                        return LanguageContruct.UNKNOWN;
+                    }else {
+                        return LanguageContruct.FUNCTION;
+                    }
+                }
+
+                //unknown
+                else {
+                    return LanguageContruct.UNKNOWN;
+                }
+
+            }else {
+                return LanguageContruct.UNKNOWN;
+            }
+        }catch (Exception ex){
+            System.out.println(currentLine);
+            ex.printStackTrace();
+            return LanguageContruct.UNKNOWN;
+        }
     }
 }

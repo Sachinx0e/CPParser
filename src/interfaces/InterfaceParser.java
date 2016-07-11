@@ -45,6 +45,18 @@ public class InterfaceParser {
                     }else {
                         interfaceK.setParentHeaderFileName(headerFileName,"");
                     }
+
+                    if(words.length > 2){
+                        String isParentTemplateStr = words[2].trim();
+                        if(isParentTemplateStr.equals("true")){
+                            interfaceK.setParentIsTemplate(true);
+                        }else {
+                            interfaceK.setParentIsTemplate(false);
+                        }
+                    }else {
+                        interfaceK.setParentIsTemplate(false);
+                    }
+
                     break;
                 case MEMOWN:
                     words = line.split(":=");

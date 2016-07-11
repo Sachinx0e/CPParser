@@ -20,6 +20,7 @@ public class Interface {
     private String mHeaderDirName = "";
     private String mParentHeader = "";
     private String mParentHeaderDir = "";
+    private boolean mIsParentTemplate = false;
 
     public void addFunctionToIgnore(String line) {
         mFunctionToIgnore.add(line);
@@ -131,6 +132,14 @@ public class Interface {
         }else {
             return "true";
         }
+    }
+
+    public void setParentIsTemplate(boolean isParentTemplate) {
+        mIsParentTemplate = isParentTemplate;
+    }
+
+    public boolean getIsParentTemplated(){
+        return mIsParentTemplate;
     }
 
 }

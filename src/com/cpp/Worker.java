@@ -6,6 +6,7 @@ import keywords.*;
 import misc.HeaderStore;
 
 import java.io.*;
+import java.util.List;
 
 /**
  * Created by Rando on 7/8/2016.
@@ -29,7 +30,12 @@ public class Worker {
         //read the file
         AST ast = new AST();
         parseNormalHeader(ast,interfaceK);
-        parseParentHeader(ast,interfaceK);
+        if(interfaceK.getIsParentTemplated()){
+            parseParentHeaderTemplated(ast,interfaceK);
+        }else {
+            parseParentHeader(ast,interfaceK);
+        }
+
 
         System.out.print(ast.getString());
 
@@ -52,7 +58,7 @@ public class Worker {
 
             currentLine = currentLine.trim();
             if(!ast.getHasReachedPrivate() && currentLine.length() != 0){
-                LanguageContruct contruct = CppParser.getConstruct(currentLine,ast,true);
+                LanguageContruct contruct = CppParser.getConstruct(currentLine,ast);
                 switch (contruct){
                     case IMPORTS:
                         ImportK importK = ImportK.read(currentLine);
@@ -69,6 +75,10 @@ public class Worker {
                     case CLASS:
                         ClassK classK = ClassK.read(currentLine);
                         ast.setClass(classK);
+                        if(interfaceK.getIsParentTemplated()){
+                            List<String> templateParams = ClassK.readTemplateParams(currentLine);
+                            ast.setTemplateParamsChild(templateParams);
+                        }
                         break;
                     case VARIABLE:
                         Variable variable = Variable.read(currentLine);
@@ -130,7 +140,7 @@ public class Worker {
 
                 currentLine = currentLine.trim();
                 if(!ast.getHasReachedPrivate() && currentLine.length() != 0){
-                    LanguageContruct contruct = CppParser.getConstruct(currentLine,ast,true);
+                    LanguageContruct contruct = CppParser.getConstruct(currentLine,ast);
                     switch (contruct){
                         case CLASS:
                             ClassK classK = ClassK.read(currentLine);
@@ -148,6 +158,60 @@ public class Worker {
                             boolean isIgnoredFunction = interfaceK.isFunctionIgnored(currentLine);
                             if(!isIgnoredFunction){
                                 Function function = Function.read(currentLine,ast);
+                                if(ast.getClassK() != null){
+                                    ast.getClassK().addFunctions(function);
+                                }else {
+                                    throw new RuntimeException("Class not found for constructor : " + function.getName());
+                                }
+                            }
+                            break;
+                        case PRIVATE:
+                            ast.setHasReachedPrivate(true);
+                    }
+                }
+            }
+        }
+    }
+
+    private void parseParentHeaderTemplated(AST ast, Interface interfaceK) throws IOException {
+        if(!interfaceK.getParentHeaderFileName().isEmpty()){
+            File headerFile = HeaderStore.findHeader(interfaceK.getParentHeaderFileName(),interfaceK.getParentHeaderDirName());
+            if(headerFile == null){
+                throw new FileNotFoundException("Could not find " + interfaceK.getFullHeaderName());
+            }
+
+            BufferedReader bufferedReader = new BufferedReader(new FileReader(headerFile));
+            String currentLine = null;
+
+            ast.setHasReachedPrivate(false);
+
+            while((currentLine = bufferedReader.readLine()) != null){
+
+                currentLine = currentLine.trim();
+                if(!ast.getHasReachedPrivate() && currentLine.length() != 0){
+                    LanguageContruct contruct = CppParser.getConstructForTemplated(currentLine,ast);
+                    switch (contruct){
+                        case TEMPLATE:
+                            String line = currentLine.replace(CppKeywordNames.TEMPLATE,"").replace("typename","").replace(">","");
+                            List<String> words = Keyword.getWords(line,",");
+                            ast.setTemplateParamsParent(words);
+                            break;
+                        case FUNCTION:
+                            line = currentLine.replace(CppKeywordNames.FUNCTION_TAG,"").trim();
+
+                            List<String> templateParamsChild = ast.getTemplateParamsChild();
+                            List<String> templateParamsParent = ast.getTemplateParamsParent();
+
+                            int size = templateParamsParent.size();
+                            for(int i = 0;i < size;i++){
+                                String paramChild = templateParamsChild.get(i);
+                                String paramParent = templateParamsParent.get(i);
+                                line = line.replace(paramParent,paramChild);
+                            }
+
+                            boolean isIgnoredFunction = interfaceK.isFunctionIgnored(line);
+                            if(!isIgnoredFunction){
+                                Function function = Function.read(line,ast);
                                 if(ast.getClassK() != null){
                                     ast.getClassK().addFunctions(function);
                                 }else {
