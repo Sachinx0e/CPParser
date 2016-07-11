@@ -18,6 +18,7 @@ public class TypeMappings {
         MAPPINGS.put("short","int16");
         MAPPINGS.put("float","float32");
         MAPPINGS.put("double","float64");
+        MAPPINGS.put("int64_t","int64");
         MAPPINGS.put("std::vector<int>","Windows::Foundation::Collections:: IVector<int>^");
         MAPPINGS.put("vector<int>","Windows::Foundation::Collections:: IVector<int>^");
         MAPPINGS.put("std::vector<std::string>","Windows::Foundation::Collections::IVector<Platform::String^>^");

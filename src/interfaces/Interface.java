@@ -14,8 +14,8 @@ public class Interface {
     private List<String> mImportFilesHeader = new ArrayList<>();
     private List<String> mImportFilesSource = new ArrayList<>();
     private List<String> mConstructorsToIgnore = new ArrayList<>();
+    private List<String> mMemOwners = new ArrayList<>();
     private HashMap<String,String> functionToRename = new HashMap<>();
-    private HashMap<String,Boolean> memOwnMap = new HashMap<>();
 
     private String mHeaderDirName = "";
     private String mParentHeader = "";
@@ -77,19 +77,6 @@ public class Interface {
         return value;
     }
 
-    public String getMemOwnStr(String line) {
-        boolean memOwn = memOwnMap.getOrDefault(line,true);
-        if(memOwn){
-            return "true";
-        }else {
-            return "false";
-        }
-    }
-
-    public void setMemOwn(String line,boolean memOwn){
-        memOwnMap.put(line,memOwn);
-    }
-
     public void setHeaderFileName(String headerFileName, String dirName) {
         mHeaderName = headerFileName;
         mHeaderDirName = dirName;
@@ -128,4 +115,22 @@ public class Interface {
     public String getParentHeaderDirName() {
         return mParentHeaderDir;
     }
+
+    public void addToMemoryOwners(String functionLine) {
+        mMemOwners.add(functionLine);
+    }
+
+    public boolean ownsMemory(String functionLine){
+        return mMemOwners.contains(functionLine);
+    }
+
+    public String getMemOwnStr(String line) {
+        boolean memOwn = ownsMemory(line);
+        if(memOwn){
+            return "false";
+        }else {
+            return "true";
+        }
+    }
+
 }

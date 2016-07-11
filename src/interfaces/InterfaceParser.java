@@ -46,6 +46,9 @@ public class InterfaceParser {
                         interfaceK.setParentHeaderFileName(headerFileName,"");
                     }
                     break;
+                case MEMOWN:
+                    words = line.split(":=");
+                    interfaceK.addToMemoryOwners(words[1].trim());
                 case CONSTRUCTOR_IGNORE:
                     words = line.split(":=");
                     interfaceK.addConstructorsToIgnore(words[1].trim());
@@ -83,11 +86,17 @@ public class InterfaceParser {
             return InterfaceConstruct.HEADER_FILE;
         }
 
+        //PARENT HEADER FILE
         else if(currentLine.contains(InterfaceKeywords.PARENT_FILE)){
              return InterfaceConstruct.PARENT_FILE;
         }
 
-        //CONVERSION CONSTRUCTOR
+        //MEMOWN
+        else if(currentLine.contains(InterfaceKeywords.MEMOWN)){
+            return InterfaceConstruct.MEMOWN;
+        }
+
+        //CONSTRUCTOR IGNORE
         else if(currentLine.contains(InterfaceKeywords.CONSTRUCTOR_IGNORE)){
             return InterfaceConstruct.CONSTRUCTOR_IGNORE;
         }

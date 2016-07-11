@@ -30,7 +30,7 @@ public class CppParser {
                 }
 
                 //class
-                else if(words.get(0).equals(CppKeywordNames.CLASS) && words.get(words.size() - 1).equals("{")){
+                else if(words.get(0).equals(CppKeywordNames.CLASS) && words.get(words.size() - 1).equals("{") && !currentLine.contains(";")){
                     return LanguageContruct.CLASS;
                 }
 
@@ -65,7 +65,7 @@ public class CppParser {
                 }
 
                 //variable
-                else if(!currentLine.contains("~") && currentLine.contains(";") && !currentLine.contains("}")){
+                else if(!currentLine.contains("~") && currentLine.contains(";") && !currentLine.contains("}") && !currentLine.contains(CppKeywordNames.CLASS)){
                     return LanguageContruct.VARIABLE;
                 }
 
