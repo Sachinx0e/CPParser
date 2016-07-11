@@ -198,11 +198,14 @@ public class Function extends Keyword {
                 if(parameter.getIsObject()){
                     String dereference;
                     if(parameter.getIsPointer()){
-                        dereference = "&";
-                    }else {
                         dereference = "";
+                    }else {
+                        dereference = "*";
                     }
-                    functionCallStrBuilder.append(dereference).append(CXXTemplates.WRAPPED_OBJECT.replace("%param_name",parameter.getName()).replace("%qualified_name",parameter.getQualifiedName()));
+                    functionCallStrBuilder.append(CXXTemplates.WRAPPED_OBJECT.
+                            replace("%dereference",dereference).
+                            replace("%param_name",parameter.getName()).
+                            replace("%qualified_name",parameter.getQualifiedName()));
                 }else if(parameter.getIsString()){
                     functionCallStrBuilder.append(CXXTemplates.STRING_CONV_FUNC_PLATFORM_TO_STD.replace("%from_name",parameter.getName()));
                 }else if(parameter.getIsListString()){

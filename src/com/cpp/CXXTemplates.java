@@ -38,7 +38,7 @@ public class CXXTemplates {
     public static String STRING_CONV_FUNC_PLATFORM_TO_STD = "string_utils::to_std_string(%from_name)";
     public static String OBJECT_CONVERSION_EXPRESSION = "RewireRuntimeComponent::%to_type^ %to_name = ref new RewireRuntimeComponent::%to_type(%from_name,%mem_own);";
     public static final String OBJECT_CONVERSION_CONSTRUCTOR_DEFINATION = "%to_type(%from_type %from_name);";
-    public static final String WRAPPED_OBJECT = "(*((%qualified_name*)%param_name->getPointer()->getAddress()))";
+    public static final String WRAPPED_OBJECT = "(%dereference((%qualified_name*)%param_name->getPointer()->getAddress()))";
     public static final String WRAPPED_POINTER = "%qualified_name* %member_name = NULL;";
 
     public static final String NATIVE__STRING_LIST_TO_PLATFORM__STRING_LIST = "Platform::Collections::Vector<Platform::String^>^ %to_value = string_utils::to_platform_list(%from_value);";
