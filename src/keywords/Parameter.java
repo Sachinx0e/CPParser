@@ -264,8 +264,8 @@ public class Parameter extends Keyword {
                     mIsConst == rValue.mIsConst &&
                     mIsPointer == rValue.mIsPointer &&
                     mIsReference == rValue.mIsReference &&
-                    mNamespace != null && mNamespace.equals(rValue.mNamespace) &&
-                    getName().equals(rValue.getName())){
+                    mNamespace != null && mNamespace.equals(rValue.mNamespace)
+                    ){
                 return true;
             }else {
                 return false;

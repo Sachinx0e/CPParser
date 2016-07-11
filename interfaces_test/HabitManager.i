@@ -12,7 +12,6 @@ IMPORT_HEADER := headers\ContentValuesWrapper.h
 IMPORT_HEADER := headers\StreaksDataHolderWrapper.h
 IMPORT_HEADER := headers\HabitDataHolderTreeWrapper.h
 IMPORT_HEADER := headers\HabitDataHolderWrapper.h
-IMPORT_HEADER := headers\HabitFilterWrapper.h
 
 IMPORT_SOURCE := IntUtils.h
 IMPORT_SOURCE := StringUtils.h

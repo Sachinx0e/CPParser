@@ -25,6 +25,7 @@ public class CXXTemplates {
                                                             "\t\tdelete m%class_name;\n" +
                                                             "\t}\n" +
                                                         "}";
+    public static final String POINTER_CAST = "(%qualified_name*)";
 
     public static String POINTER_TO_NATIVE_CAST = "*((%qualified_name*)%variable->getPointer()->getAddress())";
     public static final String NATIVE_OBJ_TO_POINTER_ASSIGNMENT_EXPRESSION = "Pointer^ pointer = ref new Pointer((__int64)new %qualified_name(%value));";

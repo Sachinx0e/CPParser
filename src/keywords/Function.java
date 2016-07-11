@@ -59,8 +59,8 @@ public class Function extends Keyword {
     }
 
     public static Function read(String currentLine,AST ast) {
-
-        List<String> words = Keyword.getWords(currentLine.replace("("," ").replace(")"," ")," ");
+        String line = currentLine.replace(CppKeywordNames.VIRTUAL,"").trim();
+        List<String> words = Keyword.getWords(line.replace("("," ").replace(")"," ")," ");
         if(words.size() > 0){
 
             boolean isVirtual = false;
@@ -97,9 +97,9 @@ public class Function extends Keyword {
             returnType = ReturnType.read(words.get(returnTypeIndex),ast);
             functionName = words.get(functionNameIndex);
 
-            List<Parameter> parameters = Parameter.read(currentLine,ast);
+            List<Parameter> parameters = Parameter.read(line,ast);
 
-            Function function = new Function(isVirtual,isStatic,returnType,functionName,parameters,currentLine);
+            Function function = new Function(isVirtual,isStatic,returnType,functionName,parameters,line);
             return function;
 
         }else {
@@ -111,10 +111,6 @@ public class Function extends Keyword {
     public String generateDeclarations(Interface interfaceK,GeneratorType generatorType){
         if(generatorType == GeneratorType.CXX){
             StringBuilder stringBuilder = new StringBuilder();
-
-            if(mIsVirtual){
-                stringBuilder.append(CppKeywordNames.VIRTUAL).append(" ");
-            }
 
             if(mIsStatic){
                 stringBuilder.append(CppKeywordNames.STATIC).append(" ");
@@ -175,7 +171,9 @@ public class Function extends Keyword {
 
             StringBuilder functionCallStrBuilder = new StringBuilder();
 
-
+            if(mReturnType.isPointer()){
+                functionCallStrBuilder.append(CXXTemplates.POINTER_CAST.replace("%qualified_name",mReturnType.getQualifedName()));
+            }
 
             //function call operator
             if(mIsStatic){
@@ -202,6 +200,7 @@ public class Function extends Keyword {
                     }else {
                         dereference = "*";
                     }
+
                     functionCallStrBuilder.append(CXXTemplates.WRAPPED_OBJECT.
                             replace("%dereference",dereference).
                             replace("%param_name",parameter.getName()).
@@ -287,7 +286,7 @@ public class Function extends Keyword {
                 for(int i = 0;i<size;i++){
                     Parameter lParameter = mParamaters.get(i);
                     Parameter rParamater = rFunction.mParamaters.get(i);
-                    if(lParameter != rParamater){
+                    if(!lParameter.equals(rParamater)){
                         return false;
                     }
                 }

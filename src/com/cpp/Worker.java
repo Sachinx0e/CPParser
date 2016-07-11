@@ -155,9 +155,10 @@ public class Worker {
                             }
                             break;
                         case FUNCTION:
+                            String line = currentLine.replace(ast.getParentClassK().getName(),ast.getClassK().getName());
                             boolean isIgnoredFunction = interfaceK.isFunctionIgnored(currentLine);
                             if(!isIgnoredFunction){
-                                Function function = Function.read(currentLine,ast);
+                                Function function = Function.read(line,ast);
                                 if(ast.getClassK() != null){
                                     ast.getClassK().addFunctions(function);
                                 }else {
@@ -206,7 +207,7 @@ public class Worker {
                             for(int i = 0;i < size;i++){
                                 String paramChild = templateParamsChild.get(i);
                                 String paramParent = templateParamsParent.get(i);
-                                line = line.replace(paramParent,paramChild);
+                                line = line.replaceAll(paramParent,paramChild);
                             }
 
                             boolean isIgnoredFunction = interfaceK.isFunctionIgnored(line);
