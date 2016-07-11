@@ -10,7 +10,6 @@ public class Main {
 
     public static void main(String[] args) throws IOException {
 
-
         ParseExceptionHandler exceptionHandler = new ParseExceptionHandler();
 
         Thread.currentThread().setUncaughtExceptionHandler(exceptionHandler);

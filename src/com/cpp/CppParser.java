@@ -54,7 +54,8 @@ public class CppParser {
                 else if(!currentLine.contains("~") &&
                         currentLine.contains("(") &&
                         currentLine.contains(")") &&
-                        currentLine.contains(";")){
+                        currentLine.contains(";") &&
+                        !currentLine.contains("=")){
 
                     if(words.get(0).equals(CppKeywordNames.CONST) || words.get(words.size() - 1).equals(CppKeywordNames.CONST + ";")){
                          return LanguageContruct.UNKNOWN;

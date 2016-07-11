@@ -1,6 +1,8 @@
 HEADER_FILE := habits\HabitDataHolder.h
 PARENT_FILE := DataHolder.h := true
 
+MEMOWN := Habit* getRef(long position);
+
 CONSTRUCTOR_IGNORE := HabitDataHolder(std::vector<Habit*>* habits, HabitFilter* filter);
 
 FUNCTION_IGNORE := bool operator==(const Items::Item& item);
