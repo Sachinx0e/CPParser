@@ -270,4 +270,30 @@ public class Function extends Keyword {
     private String getReadLine() {
         return mReadLine;
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if(obj instanceof Function){
+            Function rFunction = (Function) obj;
+            if(     mIsStatic == rFunction.mIsStatic &&
+                    mReturnType != null &&
+                    mReturnType.equals(rFunction.mReturnType) &&
+                    getName().equals(rFunction.getName()) &&
+                    mParamaters.size() == rFunction.mParamaters.size()){
+                int size = mParamaters.size();
+                for(int i = 0;i<size;i++){
+                    Parameter lParameter = mParamaters.get(i);
+                    Parameter rParamater = rFunction.mParamaters.get(i);
+                    if(lParameter != rParamater){
+                        return false;
+                    }
+                }
+                return true;
+            }else {
+                return false;
+            }
+        }else {
+            return false;
+        }
+    }
 }

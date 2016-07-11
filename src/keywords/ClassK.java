@@ -34,7 +34,9 @@ public class ClassK extends Keyword {
     }
 
     public void addFunctions(Function function) {
-        mFunctions.add(function);
+        if(!mFunctions.contains(function)){
+            mFunctions.add(function);
+        }
     }
 
     public List<Variable> getVariables() {

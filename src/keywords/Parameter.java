@@ -256,4 +256,22 @@ public class Parameter extends Keyword {
         return mNamespace + "::" + getType();
     }
 
+    @Override
+    public boolean equals(Object obj) {
+        if(obj instanceof Parameter){
+            Parameter rValue = (Parameter) obj;
+            if(mType.equals(rValue.mType) &&
+                    mIsConst == rValue.mIsConst &&
+                    mIsPointer == rValue.mIsPointer &&
+                    mIsReference == rValue.mIsReference &&
+                    mNamespace != null && mNamespace.equals(rValue.mNamespace) &&
+                    getName().equals(rValue.getName())){
+                return true;
+            }else {
+                return false;
+            }
+        }else {
+            return false;
+        }
+    }
 }

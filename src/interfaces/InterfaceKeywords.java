@@ -10,4 +10,5 @@ public class InterfaceKeywords {
     public static final CharSequence IMPORT_HEADER = "IMPORT_HEADER";
     public static final CharSequence IMPORT_SOURCE = "IMPORT_SOURCE";
     public static final CharSequence CONSTRUCTOR_IGNORE = "CONSTRUCTOR_IGNORE";
+    public static final CharSequence PARENT_FILE = "PARENT_FILE";
 }

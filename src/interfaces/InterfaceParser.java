@@ -35,6 +35,17 @@ public class InterfaceParser {
                         interfaceK.setHeaderFileName(headerFileName,"");
                     }
                     break;
+                case PARENT_FILE:
+                    words = line.split(":=");
+                    headerFileName = words[1].trim();
+                    if(headerFileName.contains("\\")){
+                        String directoryName = headerFileName.substring(0,headerFileName.lastIndexOf("\\"));
+                        String headerName = headerFileName.substring(headerFileName.lastIndexOf("\\") + 1,headerFileName.length());
+                        interfaceK.setParentHeaderFileName(headerName,directoryName);
+                    }else {
+                        interfaceK.setParentHeaderFileName(headerFileName,"");
+                    }
+                    break;
                 case CONSTRUCTOR_IGNORE:
                     words = line.split(":=");
                     interfaceK.addConstructorsToIgnore(words[1].trim());
@@ -70,6 +81,10 @@ public class InterfaceParser {
         //HEADER_FILE
         if(currentLine.contains(InterfaceKeywords.HEADER_FILE)){
             return InterfaceConstruct.HEADER_FILE;
+        }
+
+        else if(currentLine.contains(InterfaceKeywords.PARENT_FILE)){
+             return InterfaceConstruct.PARENT_FILE;
         }
 
         //CONVERSION CONSTRUCTOR

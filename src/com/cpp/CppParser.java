@@ -40,9 +40,13 @@ public class CppParser {
                 }
 
                 //constructor
-                else if(ast.getClassK() != null &&
+                else if((ast.getClassK() != null &&
                         !words.get(0).contains("~") &&
-                        words.get(0).contains(ast.getClassK().getName() + "(")){
+                        words.get(0).contains(ast.getClassK().getName() + "(")) ||
+                        (ast.getParentClassK() != null &&
+                                !words.get(0).contains("~") &&
+                                words.get(0).contains(ast.getParentClassK().getName() + "("))
+                        ){
                     return LanguageContruct.CONSTRUCTOR;
                 }
 

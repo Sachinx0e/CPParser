@@ -18,6 +18,8 @@ public class Interface {
     private HashMap<String,Boolean> memOwnMap = new HashMap<>();
 
     private String mHeaderDirName = "";
+    private String mParentHeader = "";
+    private String mParentHeaderDir = "";
 
     public void addFunctionToIgnore(String line) {
         mFunctionToIgnore.add(line);
@@ -114,5 +116,16 @@ public class Interface {
     }
 
 
+    public void setParentHeaderFileName(String headerName, String directoryName) {
+        mParentHeader = headerName;
+        mParentHeaderDir = directoryName;
+    }
 
+    public String getParentHeaderFileName(){
+        return mParentHeader;
+    }
+
+    public String getParentHeaderDirName() {
+        return mParentHeaderDir;
+    }
 }

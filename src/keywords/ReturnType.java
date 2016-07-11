@@ -135,4 +135,18 @@ public class ReturnType extends Keyword {
             return getName();
         }
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if(obj instanceof ReturnType){
+            ReturnType rValue = (ReturnType) obj;
+            if(mIsPointer == rValue.mIsPointer && mIsReference == rValue.mIsReference && mNamespace != null && mNamespace.equals(rValue.mNamespace) && getName().equals(rValue.getName())){
+                return true;
+            }else {
+                return false;
+            }
+        }else {
+            return false;
+        }
+    }
 }

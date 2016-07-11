@@ -14,7 +14,6 @@ public class Worker {
     private final File mInterfaceFile;
     private final String mNamespace;
     private final File mOutPutDir;
-    private String currentLine;
 
     public Worker(File interfaceFile,String namespace,File outPutDir){
         mInterfaceFile = interfaceFile;
@@ -29,12 +28,23 @@ public class Worker {
 
         //read the file
         AST ast = new AST();
+        parseNormalHeader(ast,interfaceK);
+        parseParentHeader(ast,interfaceK);
+
+        System.out.print(ast.getString());
+
+        Generator cxxGenerator = new Generator(ast,mNamespace,interfaceK,GeneratorType.CXX,mOutPutDir);
+        cxxGenerator.generateHeader();
+        cxxGenerator.generateSource();
+    }
+
+    private void parseNormalHeader(AST ast, Interface interfaceK) throws IOException {
         File headerFile = HeaderStore.findHeader(interfaceK.getHeaderName(),interfaceK.getHeaderDirName());
         if(headerFile == null){
             throw new FileNotFoundException("Could not find " + interfaceK.getFullHeaderName());
         }
         BufferedReader bufferedReader = new BufferedReader(new FileReader(headerFile));
-        currentLine = null;
+        String currentLine = null;
 
         char previousChar = 'j';
 
@@ -102,11 +112,55 @@ public class Worker {
                 }
             }
         }
-
-        System.out.print(ast.getString());
-
-        Generator cxxGenerator = new Generator(ast,mNamespace,interfaceK,GeneratorType.CXX,mOutPutDir);
-        cxxGenerator.generateHeader();
-        cxxGenerator.generateSource();
     }
+
+    private void parseParentHeader(AST ast, Interface interfaceK) throws IOException {
+        if(!interfaceK.getParentHeaderFileName().isEmpty()){
+            File headerFile = HeaderStore.findHeader(interfaceK.getParentHeaderFileName(),interfaceK.getParentHeaderDirName());
+            if(headerFile == null){
+                throw new FileNotFoundException("Could not find " + interfaceK.getFullHeaderName());
+            }
+
+            BufferedReader bufferedReader = new BufferedReader(new FileReader(headerFile));
+            String currentLine = null;
+
+            ast.setHasReachedPrivate(false);
+
+            while((currentLine = bufferedReader.readLine()) != null){
+
+                currentLine = currentLine.trim();
+                if(!ast.getHasReachedPrivate() && currentLine.length() != 0){
+                    LanguageContruct contruct = CppParser.getConstruct(currentLine,ast,true);
+                    switch (contruct){
+                        case CLASS:
+                            ClassK classK = ClassK.read(currentLine);
+                            ast.setParentClass(classK);
+                            break;
+                        case VARIABLE:
+                            Variable variable = Variable.read(currentLine);
+                            if(ast.getClassK() != null){
+                                ast.getClassK().addVariable(variable);
+                            }else{
+                                throw new RuntimeException("Class not found for variable : " + variable.getName());
+                            }
+                            break;
+                        case FUNCTION:
+                            boolean isIgnoredFunction = interfaceK.isFunctionIgnored(currentLine);
+                            if(!isIgnoredFunction){
+                                Function function = Function.read(currentLine,ast);
+                                if(ast.getClassK() != null){
+                                    ast.getClassK().addFunctions(function);
+                                }else {
+                                    throw new RuntimeException("Class not found for constructor : " + function.getName());
+                                }
+                            }
+                            break;
+                        case PRIVATE:
+                            ast.setHasReachedPrivate(true);
+                    }
+                }
+            }
+        }
+    }
+
 }

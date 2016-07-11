@@ -14,6 +14,7 @@ public class AST {
     Namespace mNamespace = null;
     private ClassK mClass = null;
     private boolean mHasReachedPrivate;
+    private ClassK mParentClassK = null;
 
     public Namespace getNamespace(){
         return mNamespace;
@@ -63,6 +64,14 @@ public class AST {
 
     public boolean getHasReachedPrivate(){
         return mHasReachedPrivate;
+    }
+
+    public void setParentClass(ClassK classK) {
+        mParentClassK = classK;
+    }
+
+    public ClassK getParentClassK(){
+        return mParentClassK;
     }
 
 }
