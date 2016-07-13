@@ -26,6 +26,20 @@ public class CXXTemplates {
                                                             "\t}\n" +
                                                         "}";
     public static final String POINTER_CAST = "(%qualified_name*)";
+    public static final String SET_MEM_OWN_DECLARATION = "void setMemOwn(bool memOwn);";
+    public static final String SET_MEM_OWN_DEFINATION = "void RewireRuntimeComponent::%class_name::setMemOwn(bool memOwn) {\n" +
+                                                               "\tmMemOwn = memOwn;\n" +
+                                                         "}";
+
+
+    public static final String DELETE_ITEM_DECLARATION = "void deleteItem();";
+    public static final String DELETE_ITEM_DEFINATION = "void RewireRuntimeComponent::%class_name::deleteItem() {\n" +
+                                                                "\tif (!mMemOwn) {\n" +
+                                                                "\t\tdelete m%class_name;\n" +
+                                                                "\t}\n" +
+                                                         "}";
+
+
 
     public static String POINTER_TO_NATIVE_CAST = "*((%qualified_name*)%variable->getPointer()->getAddress())";
     public static final String NATIVE_OBJ_TO_POINTER_ASSIGNMENT_EXPRESSION = "Pointer^ pointer = ref new Pointer((__int64)new %qualified_name(%value));";

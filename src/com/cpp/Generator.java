@@ -89,6 +89,13 @@ public class Generator {
         //getPointer()
         stringBuilder.append(CXXTemplates.SPACING_3).append("Pointer^ getPointer();\n\n");
 
+        //set MemOwn
+        stringBuilder.append(CXXTemplates.SPACING_3).append(CXXTemplates.SET_MEM_OWN_DECLARATION).append("\n\n");
+
+        //delete
+        stringBuilder.append(CXXTemplates.SPACING_3).append(CXXTemplates.DELETE_ITEM_DECLARATION).append("\n\n");
+
+
         //private member
         stringBuilder.append(CXXTemplates.SPACING_2).append(CppKeywordNames.PRIVATE).append("\n");
 
@@ -138,6 +145,7 @@ public class Generator {
         stringBuilder.append("\n\n");
 
 
+
         //start adding constructors
         List<Constructor> constructors = mAST.getClassK().getConstructors();
         for(int i = 0;i<constructors.size();i++){
@@ -164,6 +172,12 @@ public class Generator {
 
         //close getPointer()
         stringBuilder.append("}\n\n");
+
+        //setMemOwn body
+        stringBuilder.append(CXXTemplates.SET_MEM_OWN_DEFINATION.replace("%class_name",mAST.getClassK().getName())).append("\n\n");
+
+        //delete Item body
+        stringBuilder.append(CXXTemplates.DELETE_ITEM_DEFINATION.replace("%class_name",mAST.getClassK().getName())).append("\n\n");
 
         //destructor body
         stringBuilder.append(CXXTemplates.DESTRUCTOR_DEFINATION.replace("%class_name",mAST.getClassK().getName()));
