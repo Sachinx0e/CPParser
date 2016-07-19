@@ -1,6 +1,9 @@
 package keywords;
 
+import com.cpp.CXXTemplates;
 import com.cpp.CppKeywordNames;
+import com.cpp.GeneratorType;
+import com.cpp.TypeMappings;
 
 import java.util.List;
 
@@ -14,10 +17,17 @@ public class Variable extends Keyword {
     private final boolean mIsStatic;
     private final boolean mIsRef;
     private final boolean mIsPointer;
+    private final String mTypeQualified;
 
     public Variable(boolean isStatic,boolean isConst,String type,boolean isRef,boolean isPointer,String keyword) {
         super(keyword);
-        mType = type;
+        mTypeQualified = type;
+        if(type.contains("::")){
+            List<String> words = Keyword.getWords(mTypeQualified,"::");
+            mType = words.get(words.size() - 1);
+        }else {
+            mType = mTypeQualified;
+        }
         mIsStatic = isStatic;
         mIsConst = isConst;
         mIsRef = isRef;
@@ -109,5 +119,69 @@ public class Variable extends Keyword {
         return null;
     }
 
+    public String getQualfiedName(AST ast){
+        String qualifiedName;
+        if(mIsStatic){
+            qualifiedName = ast.getClassK().getQualifiedName(ast) + "::" + getName();
+        }else {
+            qualifiedName = "m" + ast.getClassK().getName() + "->" + getName();
+        }
+
+        return qualifiedName;
+    }
+
+    public String generateDeclaration(GeneratorType generatorType) {
+        if(generatorType == GeneratorType.CXX){
+            StringBuilder stringBuilder = new StringBuilder();
+            stringBuilder.append(CXXTemplates.SPACING_3);
+            if(mIsStatic){
+                stringBuilder.append("static ");
+            }
+            String typeMapped = TypeMappings.getMappingQualified(mType);
+
+            stringBuilder.append(CXXTemplates.PROPERTY_DECLARATION_TEMPLATE.replace("%type",typeMapped).replace("%name",getName()));
+
+            return stringBuilder.toString();
+
+        }else{
+            return null;
+        }
+    }
+
+    public String generateDefination(GeneratorType generatorType,AST ast) {
+        if(generatorType == GeneratorType.CXX){
+
+            StringBuilder stringBuilderBody = new StringBuilder();
+
+
+            //if is string
+            if(mType.equals("std::string") || mType.equals("string")){
+                stringBuilderBody.append(CXXTemplates.SPACING_1).append("return ");
+                stringBuilderBody.append(CXXTemplates.STRING_CONV_FUNC_STD_TO_PLATFORM.replace("%from_name",getQualfiedName(ast)));
+            }
+            //if is object
+            else if(Character.isUpperCase(mType.charAt(0))) {
+                stringBuilderBody.append(CXXTemplates.NATIVE_VARIABLE_TO_PLATFORM_CONV_BODY.replace("%qualified_name",getQualfiedName(ast)).replace("%type_name",mType));
+            }
+            //if inbuilt type
+            else{
+                stringBuilderBody.append(CXXTemplates.SPACING_1).append("return ");
+                stringBuilderBody.append(getQualfiedName(ast));
+            }
+
+
+
+            StringBuilder stringBuilder = new StringBuilder();
+            String mappedType = TypeMappings.getMappingQualified(mType);
+            stringBuilder.append(CXXTemplates.PROPERTY_DEFINATION_TEMPLATE.replace("%type",mappedType)
+                                                                          .replace("%class_name",ast.getClassK().getName())
+                                                                          .replace("%name",getName())
+                                                                          .replace("%body",stringBuilderBody.toString()));
+
+            return stringBuilder.toString();
+        }else {
+            return null;
+        }
+    }
 
 }

@@ -4,6 +4,7 @@ import interfaces.Interface;
 import keywords.AST;
 import keywords.Constructor;
 import keywords.Function;
+import keywords.Variable;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -65,6 +66,14 @@ public class Generator {
         //public scope
         stringBuilder.append(CXXTemplates.SPACING_2).append(CppKeywordNames.PUBLIC).append("\n");
 
+        //VARIABLES
+        List<Variable> variables = mAST.getClassK().getVariables();
+        for(int i = 0;i < variables.size();i++){
+            Variable variable = variables.get(i);
+            String variableStr = variable.generateDeclaration(mGeneratorType);
+            stringBuilder.append(variableStr).append("\n\n");
+        }
+
         //Pointer constructor
         stringBuilder.append(CXXTemplates.SPACING_3).append(CXXTemplates.POINTER_CONSTRUCTOR_DECLARATION.replace("%class_name",mAST.getClassK().getName())).append("\n\n");
 
@@ -94,7 +103,6 @@ public class Generator {
 
         //delete
         stringBuilder.append(CXXTemplates.SPACING_3).append(CXXTemplates.DELETE_ITEM_DECLARATION).append("\n\n");
-
 
         //private member
         stringBuilder.append(CXXTemplates.SPACING_2).append(CppKeywordNames.PRIVATE).append("\n");
@@ -144,7 +152,13 @@ public class Generator {
         //pointer constructor body end
         stringBuilder.append("\n\n");
 
-
+        //variables
+        List<Variable> variables = mAST.getClassK().getVariables();
+        for(int i = 0;i<variables.size();i++){
+            Variable variable = variables.get(i);
+            String variablesStr = variable.generateDefination(mGeneratorType,mAST);
+            stringBuilder.append(variablesStr).append("\n\n");
+        }
 
         //start adding constructors
         List<Constructor> constructors = mAST.getClassK().getConstructors();

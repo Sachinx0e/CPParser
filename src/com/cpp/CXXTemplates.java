@@ -51,6 +51,7 @@ public class CXXTemplates {
     public static String IMPORT = "#include <%>";
     public static String STRING_CONVERSION_EXPRESSION = "Platform::String^ %to_name = string_utils::to_platform_string(%from_name);";
     public static String STRING_CONV_FUNC_PLATFORM_TO_STD = "string_utils::to_std_string(%from_name)";
+    public static String STRING_CONV_FUNC_STD_TO_PLATFORM = "string_utils::to_platform_string(%from_name);";
     public static String OBJECT_CONVERSION_EXPRESSION = "RewireRuntimeComponent::%to_type^ %to_name = ref new RewireRuntimeComponent::%to_type(%from_name,%mem_own);";
     public static final String OBJECT_CONVERSION_CONSTRUCTOR_DEFINATION = "%to_type(%from_type %from_name);";
     public static final String WRAPPED_OBJECT = "(%dereference((%qualified_name*)%param_name->getPointer()->getAddress()))";
@@ -62,5 +63,15 @@ public class CXXTemplates {
     public static final String NATIVE_INT_LIST_TO_PLATFORM_INT_LIST = "Platform::Collections::Vector<int>^ %to_value = int_utils::to_platform_list(%from_value);";
     public static final String INT_LIST_CONV_PLATFORM_TO_STD = "int_utils::to_native_list(%from_name)";
 
+    public static final String PROPERTY_DECLARATION_TEMPLATE = "property %type %name {\n" +
+                                                               "\t\t\t  %type get();\n" +
+                                                                "\t\t }";
+
+    public static final String PROPERTY_DEFINATION_TEMPLATE = "%type RewireRuntimeComponent::%class_name::%name::get() {\n" +
+                                                                "\t%body;\n" +
+                                                               "}";
+
+    public static final String NATIVE_VARIABLE_TO_PLATFORM_CONV_BODY = "Pointer^ pointer = ref new Pointer((__int64)&%qualified_name);\n"+
+                                                                "\treturn ref new RewireRuntimeComponent::%type_name(pointer,false);";
 
 }

@@ -8,6 +8,8 @@ import java.util.HashMap;
 public class TypeMappings {
     private static HashMap<String,String> MAPPINGS = new HashMap<>();
 
+    public static final String LIB_NAMESPACE = "RewireRuntimeComponent";
+
     static {
         MAPPINGS.put("std::string","Platform::String^");
         MAPPINGS.put("string","Platform::String^");
@@ -36,5 +38,18 @@ public class TypeMappings {
             return mapping;
         }
     }
+
+    public static String getMappingQualified(String type){
+        if(type.equals(CppKeywordNames.VOID)){
+            return type;
+        }else {
+            String mapping = MAPPINGS.get(type);
+            if(mapping == null){
+                mapping = LIB_NAMESPACE + "::" + type + "^";
+            }
+            return mapping;
+        }
+    }
+
 
 }

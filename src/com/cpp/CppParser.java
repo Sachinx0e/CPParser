@@ -14,8 +14,13 @@ public class CppParser {
         try{
             if(words.size() > 0){
 
+                //comments
+                if(currentLine.contains("//") || currentLine.contains("/*") || currentLine.contains("*/")){
+                    return LanguageContruct.UNKNOWN;
+                }
+
                 //import
-                if(words.get(0).equals(CppKeywordNames.IMPORT)){
+                else if(words.get(0).equals(CppKeywordNames.IMPORT)){
                     return LanguageContruct.IMPORTS;
                 }
 
@@ -66,7 +71,11 @@ public class CppParser {
                 }
 
                 //variable
-                else if(!currentLine.contains("~") && currentLine.contains(";") && !currentLine.contains("}") && !currentLine.contains(CppKeywordNames.CLASS)){
+                else if(!currentLine.contains("~") &&
+                        currentLine.contains(";") &&
+                        !currentLine.contains("}") &&
+                        !currentLine.contains("(") &&
+                        !currentLine.contains(CppKeywordNames.CLASS)){
                     return LanguageContruct.VARIABLE;
                 }
 
