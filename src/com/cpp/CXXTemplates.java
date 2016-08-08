@@ -38,7 +38,15 @@ public class CXXTemplates {
                                                                 "\t\tdelete m%class_name;\n" +
                                                                 "\t}\n" +
                                                          "}";
-
+    public static final String IS_NULL_DECLARATION = "bool isNull();" ;
+    public static final String IS_NULL_BODY = "bool RewireRuntimeComponent::%class_name::isNull() {\n" +
+            "\tif (m%class_name == NULL) {\n" +
+            "\t\treturn true;\n" +
+            "\t}\n" +
+            "\telse {\n" +
+            "\t\treturn false;\n" +
+            "\t}\n" +
+            "}";
 
 
     public static String POINTER_TO_NATIVE_CAST = "*((%qualified_name*)%variable->getPointer()->getAddress())";

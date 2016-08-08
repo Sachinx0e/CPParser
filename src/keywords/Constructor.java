@@ -93,7 +93,16 @@ public class Constructor extends Keyword {
                 String paramName;
                 if(parameter.getIsObject()){
                     //*((Applib::DateTime::LocalDate*)startDate->getPointer())
-                    paramName = CXXTemplates.POINTER_TO_NATIVE_CAST.replace("%qualified_name",parameter.getQualifiedName()).replace("%variable",parameter.getName());
+                    //paramName = CXXTemplates.POINTER_TO_NATIVE_CAST.replace("%qualified_name",parameter.getQualifiedName()).replace("%variable",parameter.getName());
+                    String dereference;
+                    if(parameter.getIsPointer()){
+                        dereference = "";
+                    }else {
+                        dereference = "*";
+                    }
+
+                    paramName = CXXTemplates.WRAPPED_OBJECT.replace("%dereference",dereference).replace("%param_name",parameter.getName()).replace("%qualified_name",parameter.getQualifiedName());
+
                 }else if(parameter.getIsString()){
                     paramName = CXXTemplates.STRING_CONV_FUNC_PLATFORM_TO_STD.replace("%from_name",parameter.getName());
                 }else if(parameter.getIsListString()){

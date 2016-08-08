@@ -104,6 +104,9 @@ public class Generator {
         //delete
         stringBuilder.append(CXXTemplates.SPACING_3).append(CXXTemplates.DELETE_ITEM_DECLARATION).append("\n\n");
 
+        //isNull
+        stringBuilder.append(CXXTemplates.SPACING_3).append(CXXTemplates.IS_NULL_DECLARATION).append("\n\n");
+
         //private member
         stringBuilder.append(CXXTemplates.SPACING_2).append(CppKeywordNames.PRIVATE).append("\n");
 
@@ -194,7 +197,10 @@ public class Generator {
         stringBuilder.append(CXXTemplates.DELETE_ITEM_DEFINATION.replace("%class_name",mAST.getClassK().getName())).append("\n\n");
 
         //destructor body
-        stringBuilder.append(CXXTemplates.DESTRUCTOR_DEFINATION.replace("%class_name",mAST.getClassK().getName()));
+        stringBuilder.append(CXXTemplates.DESTRUCTOR_DEFINATION.replace("%class_name",mAST.getClassK().getName())).append("\n\n");
+
+        //is null body
+        stringBuilder.append(CXXTemplates.IS_NULL_BODY.replace("%class_name",mAST.getClassK().getName()));
 
         System.out.print("  ");
         System.out.print(stringBuilder.toString());
