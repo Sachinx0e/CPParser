@@ -60,7 +60,7 @@ public class CppParser {
                         currentLine.contains("(") &&
                         currentLine.contains(")") &&
                         currentLine.contains(";") &&
-                        !currentLine.contains("=")){
+                        !((currentLine.contains(CppKeywordNames.VIRTUAL)) && currentLine.contains("="))){
 
                     if(words.get(0).equals(CppKeywordNames.CONST) || words.get(words.size() - 1).equals(CppKeywordNames.CONST + ";")){
                          return LanguageContruct.UNKNOWN;
