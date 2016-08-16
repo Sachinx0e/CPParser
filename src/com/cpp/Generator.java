@@ -125,14 +125,13 @@ public class Generator {
         //close namespace
         stringBuilder.append("}\n");
 
-        System.out.print("  ");
-        System.out.print(stringBuilder.toString());
-        System.out.print("  ");
-
         FileWriter fileWriter = new FileWriter(new File(mHeaderOutPutDir,mInterfaceK.getTranslationUnitHeaderName()));
         BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
         bufferedWriter.write(stringBuilder.toString());
         bufferedWriter.flush();
+
+        System.out.println("Generated header for class " + mAST.getClassK().getQualifiedName(mAST));
+
     }
 
     public void generateSource() throws IOException {
@@ -202,14 +201,13 @@ public class Generator {
         //is null body
         stringBuilder.append(CXXTemplates.IS_NULL_BODY.replace("%class_name",mAST.getClassK().getName()));
 
-        System.out.print("  ");
-        System.out.print(stringBuilder.toString());
-        System.out.print("  ");
-
         FileWriter fileWriter = new FileWriter(new File(mSourceOutPutDir,mInterfaceK.getTranslationUnitSourceName()));
         BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
         bufferedWriter.write(stringBuilder.toString());
         bufferedWriter.flush();
+
+        System.out.println("Generated source for class " + mAST.getClassK().getQualifiedName(mAST) + "\n");
+
     }
 
 }

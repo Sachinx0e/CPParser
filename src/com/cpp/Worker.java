@@ -37,7 +37,7 @@ public class Worker {
         }
 
 
-        System.out.print(ast.getString());
+        System.out.println("Generating for class : " + ast.getClassK().getQualifiedName(ast));
 
         Generator cxxGenerator = new Generator(ast,mNamespace,interfaceK,GeneratorType.CXX,mOutPutDir);
         cxxGenerator.generateHeader();
