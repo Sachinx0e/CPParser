@@ -16,6 +16,7 @@ public class Main {
 
         String namespace = "RewireRuntimeComponent";
         File dir = new File("D:\\Projects\\Rewire\\rewire_windows\\rewirelib\\interfaces");
+        //File dir = new File("interfaces_test");
         File[] interfaceFiles = dir.listFiles((dir1, name) -> {
             System.out.println(name);
             return name.toLowerCase().endsWith(".i");

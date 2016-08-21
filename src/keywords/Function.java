@@ -63,35 +63,32 @@ public class Function extends Keyword {
         List<String> words = Keyword.getWords(line.replace("("," ").replace(")"," ")," ");
         if(words.size() > 0){
 
-            boolean isVirtual = false;
-            if(words.get(0).equals(CppKeywordNames.VIRTUAL)){
-                isVirtual = true;
-            }
+            //get words list for function return types
+            String returnTypesSignature = line.substring(0,line.indexOf("("));
+            List<String> returnWords = Keyword.getWords(returnTypesSignature," ");
 
-            boolean isStatic = false;
-            if(isVirtual){
-                if(words.get(1).equals(CppKeywordNames.STATIC)){
-                    isStatic = true;
-                }
-            }else {
-                if(words.get(0).equals(CppKeywordNames.STATIC)){
-                    isStatic = true;
-                }
-            }
-
+            boolean isVirtual = returnWords.contains(CppKeywordNames.VIRTUAL);
+            boolean isStatic = returnWords.contains(CppKeywordNames.STATIC);
+            boolean isConst = returnWords.contains(CppKeywordNames.CONST);
 
             ReturnType returnType = null;
             String functionName = null;
             int returnTypeIndex = 0;
             int functionNameIndex = 1;
 
-
-            if((isVirtual && !isStatic) || (!isVirtual && isStatic)){
+            if(isVirtual){
                 returnTypeIndex = 1;
                 functionNameIndex = 2;
-            }else if(isVirtual && isStatic){
-                returnTypeIndex = 2;
-                functionNameIndex = 3;
+            }
+
+            if(isStatic){
+                returnTypeIndex = returnTypeIndex + 1;
+                functionNameIndex = functionNameIndex + 1;
+            }
+
+            if(isConst){
+                returnTypeIndex = returnTypeIndex + 1;
+                functionNameIndex = functionNameIndex + 1;
             }
 
             returnType = ReturnType.read(words.get(returnTypeIndex),ast);
