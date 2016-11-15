@@ -23,6 +23,9 @@ public class Main {
     private static String currentLine;
     private static File mInterfaceFile;
 
+    public static final String INTERFACE_FOLDER = "D:\\Projects\\Rewire\\rewire_windows\\rewirelib\\interfaces";
+    public static final String OUTPUT_FOLDER = "D:\\Projects\\Rewire\\rewire_windows\\Rewire\\RewireRuntimeComponent";
+
     public static void main(String[] args) throws IOException {
 
         ParseExceptionHandler exceptionHandler = new ParseExceptionHandler();
@@ -30,7 +33,7 @@ public class Main {
         Thread.currentThread().setUncaughtExceptionHandler(exceptionHandler);
 
         String namespace = "RewireRuntimeComponent";
-        File dir = new File("D:\\Projects\\Rewire\\rewire_windows\\rewirelib\\interfaces");
+        File dir = new File(INTERFACE_FOLDER);
         //File dir = new File("interfaces_test");
         File[] interfaceFiles = dir.listFiles((dir1, name) -> {
             System.out.println(name);
@@ -38,7 +41,7 @@ public class Main {
         });
         System.out.println();
 
-        File OutPutDir = new File("D:\\Projects\\Rewire\\rewire_windows\\Rewire\\RewireRuntimeComponent");
+        File OutPutDir = new File(OUTPUT_FOLDER);
         OutPutDir.mkdir();
 
         int i = 0;
