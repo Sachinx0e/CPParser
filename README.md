@@ -10,9 +10,9 @@ CPP-Parser is a tool to generate wrapper code by reading the c++ headers
 ## Build Intstructions ##
 Just open the project in IntelliJ IDEA and press `Run -> Run CParser`
 
-To change the location from where the `interface` files will be read go to `Main.java` and change the value of
-`INTERFACE_FOLDER` variable.
-To change the location of generated wrapper code go to `Main.java` and change the value of `OUTPUT_FOLDER` variable
+ - To change the location from where the `interface` files will be read go to `Main.java` and change the value of`INTERFACE_FOLDER` variable.
+ - To change the location of generated wrapper code go to `Main.java` and change the value of `OUTPUT_FOLDER` variable
+
 		  
 
 ## Authors
