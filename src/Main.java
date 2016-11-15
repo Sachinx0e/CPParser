@@ -3,6 +3,21 @@ import com.cpp.Worker;
 import java.io.File;
 import java.io.IOException;
 
+/***
+ * Copyright (C) RandomeStudios. All rights reserved.
+ *
+ * @author Sachin Gavali
+ * <p>
+ * =+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+
+ * Class        : Main
+ * <p>
+ * <p>
+ * This class is the main entry point of the program
+ *
+ * <p>
+ * =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+ */
+
 public class Main {
 
     private static String currentLine;
@@ -28,9 +43,9 @@ public class Main {
 
         int i = 0;
 
-        for(File interfaceFile : interfaceFiles){
+        for (File interfaceFile : interfaceFiles) {
             mInterfaceFile = interfaceFile;
-            Worker worker = new Worker(interfaceFile,namespace,OutPutDir);
+            Worker worker = new Worker(interfaceFile, namespace, OutPutDir);
             worker.work();
             i++;
         }
@@ -44,7 +59,7 @@ public class Main {
         @Override
         public void uncaughtException(Thread t, Throwable e) {
             System.err.println("Error parsing line : " + currentLine);
-            if(mInterfaceFile != null){
+            if (mInterfaceFile != null) {
                 System.err.println(mInterfaceFile.toString());
             }
             e.printStackTrace();

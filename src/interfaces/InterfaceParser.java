@@ -1,16 +1,31 @@
 package interfaces;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
 
-/**
- * Created by Rando on 7/8/2016.
+/***
+ * Copyright (C) RandomeStudios. All rights reserved.
+ *
+ * @author Sachin Gavali
+ * <p>
+ * =+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+
+ * Class        : InterfaceParser
+ * Package      : interfaces
+ * <p>
+ * <p>
+ * This class deals with parsing of the interface defination files and creating interface objects
+ * <p>
+ * =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
  */
+
 public class InterfaceParser {
 
     private final File mInterfaceFile;
     private String currentLine;
 
-    public InterfaceParser(File interfaceFile){
+    public InterfaceParser(File interfaceFile) {
         mInterfaceFile = interfaceFile;
     }
 
@@ -20,40 +35,40 @@ public class InterfaceParser {
         BufferedReader bufferedReader = new BufferedReader(new FileReader(mInterfaceFile));
         currentLine = null;
 
-        while((currentLine = bufferedReader.readLine()) != null){
+        while ((currentLine = bufferedReader.readLine()) != null) {
             String line = currentLine.trim();
             InterfaceConstruct interfaceConstruct = getConstruct(line);
-            switch (interfaceConstruct){
+            switch (interfaceConstruct) {
                 case HEADER_FILE:
-                    String [] words = line.split(":=");
+                    String[] words = line.split(":=");
                     String headerFileName = words[1].trim();
-                    if(headerFileName.contains("\\")){
-                        String directoryName = headerFileName.substring(0,headerFileName.lastIndexOf("\\"));
-                        String headerName = headerFileName.substring(headerFileName.lastIndexOf("\\") + 1,headerFileName.length());
-                        interfaceK.setHeaderFileName(headerName,directoryName);
-                    }else {
-                        interfaceK.setHeaderFileName(headerFileName,"");
+                    if (headerFileName.contains("\\")) {
+                        String directoryName = headerFileName.substring(0, headerFileName.lastIndexOf("\\"));
+                        String headerName = headerFileName.substring(headerFileName.lastIndexOf("\\") + 1, headerFileName.length());
+                        interfaceK.setHeaderFileName(headerName, directoryName);
+                    } else {
+                        interfaceK.setHeaderFileName(headerFileName, "");
                     }
                     break;
                 case PARENT_FILE:
                     words = line.split(":=");
                     headerFileName = words[1].trim();
-                    if(headerFileName.contains("\\")){
-                        String directoryName = headerFileName.substring(0,headerFileName.lastIndexOf("\\"));
-                        String headerName = headerFileName.substring(headerFileName.lastIndexOf("\\") + 1,headerFileName.length());
-                        interfaceK.setParentHeaderFileName(headerName,directoryName);
-                    }else {
-                        interfaceK.setParentHeaderFileName(headerFileName,"");
+                    if (headerFileName.contains("\\")) {
+                        String directoryName = headerFileName.substring(0, headerFileName.lastIndexOf("\\"));
+                        String headerName = headerFileName.substring(headerFileName.lastIndexOf("\\") + 1, headerFileName.length());
+                        interfaceK.setParentHeaderFileName(headerName, directoryName);
+                    } else {
+                        interfaceK.setParentHeaderFileName(headerFileName, "");
                     }
 
-                    if(words.length > 2){
+                    if (words.length > 2) {
                         String isParentTemplateStr = words[2].trim();
-                        if(isParentTemplateStr.equals("true")){
+                        if (isParentTemplateStr.equals("true")) {
                             interfaceK.setParentIsTemplate(true);
-                        }else {
+                        } else {
                             interfaceK.setParentIsTemplate(false);
                         }
-                    }else {
+                    } else {
                         interfaceK.setParentIsTemplate(false);
                     }
 
@@ -73,7 +88,7 @@ public class InterfaceParser {
                     words = line.split(":");
                     String fromName = words[1].trim();
                     String toName = words[2].trim();
-                    interfaceK.addFunctionRename(fromName,toName);
+                    interfaceK.addFunctionRename(fromName, toName);
                     break;
                 case IMPORT_HEADER:
                     words = line.split(":=");
@@ -91,45 +106,45 @@ public class InterfaceParser {
         return interfaceK;
     }
 
-    private InterfaceConstruct getConstruct(String currentLine){
+    private InterfaceConstruct getConstruct(String currentLine) {
 
         //HEADER_FILE
-        if(currentLine.contains(InterfaceKeywords.HEADER_FILE)){
+        if (currentLine.contains(InterfaceKeywords.HEADER_FILE)) {
             return InterfaceConstruct.HEADER_FILE;
         }
 
         //PARENT HEADER FILE
-        else if(currentLine.contains(InterfaceKeywords.PARENT_FILE)){
-             return InterfaceConstruct.PARENT_FILE;
+        else if (currentLine.contains(InterfaceKeywords.PARENT_FILE)) {
+            return InterfaceConstruct.PARENT_FILE;
         }
 
         //MEMOWN
-        else if(currentLine.contains(InterfaceKeywords.MEMOWN)){
+        else if (currentLine.contains(InterfaceKeywords.MEMOWN)) {
             return InterfaceConstruct.MEMOWN;
         }
 
         //CONSTRUCTOR IGNORE
-        else if(currentLine.contains(InterfaceKeywords.CONSTRUCTOR_IGNORE)){
+        else if (currentLine.contains(InterfaceKeywords.CONSTRUCTOR_IGNORE)) {
             return InterfaceConstruct.CONSTRUCTOR_IGNORE;
         }
 
         //FUNCTION IGNORE
-        else if(currentLine.contains(InterfaceKeywords.FUNCTION_IGNORE)){
+        else if (currentLine.contains(InterfaceKeywords.FUNCTION_IGNORE)) {
             return InterfaceConstruct.FUNCTION_IGNORE;
         }
 
         //RENAME FUNC
-        else if(currentLine.contains(InterfaceKeywords.RENAME_FUNC)){
+        else if (currentLine.contains(InterfaceKeywords.RENAME_FUNC)) {
             return InterfaceConstruct.RENAME_FUNC;
         }
 
         //IMPORT_HEADER
-        else if(currentLine.contains(InterfaceKeywords.IMPORT_HEADER)){
+        else if (currentLine.contains(InterfaceKeywords.IMPORT_HEADER)) {
             return InterfaceConstruct.IMPORT_HEADER;
         }
 
         //IMPORT SOURCE
-        else if(currentLine.contains(InterfaceKeywords.IMPORT_SOURCE)){
+        else if (currentLine.contains(InterfaceKeywords.IMPORT_SOURCE)) {
             return InterfaceConstruct.IMPORT_SOURCE;
         }
 

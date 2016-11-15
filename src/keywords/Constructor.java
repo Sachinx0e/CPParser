@@ -6,9 +6,22 @@ import com.cpp.GeneratorType;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by Rando on 6/28/2016.
+/***
+ * Copyright (C) RandomeStudios. All rights reserved.
+ *
+ * @author Sachin Gavali
+ * <p>
+ * =+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+
+ * Class        : Constructor
+ * Package      : keywords
+ * <p>
+ * <p>
+ * This class represents an AST for Contructor
+ *
+ * <p>
+ * =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
  */
+
 public class Constructor extends Keyword {
 
     private List<Parameter> mParameters = new ArrayList<>();
@@ -17,50 +30,50 @@ public class Constructor extends Keyword {
         super(name);
     }
 
-    public void addParam(Parameter parameter){
-        mParameters.add(parameter);
-    }
-
-    public void addParam(List<Parameter> parameters){
-        mParameters.addAll(parameters);
-    }
-
-    public static Constructor read(String currentLine,AST ast) {
-        String currentLineWithSpaces = currentLine.replace("("," ").replace(")"," ");
-        List<String> words = Keyword.getWords(currentLineWithSpaces," ");
-        if(words.size() > 0){
+    public static Constructor read(String currentLine, AST ast) {
+        String currentLineWithSpaces = currentLine.replace("(", " ").replace(")", " ");
+        List<String> words = Keyword.getWords(currentLineWithSpaces, " ");
+        if (words.size() > 0) {
             String name = words.get(0);
-            List<Parameter> parameters = Parameter.read(currentLine,ast);
+            List<Parameter> parameters = Parameter.read(currentLine, ast);
             Constructor constructor = new Constructor(name);
             constructor.addParam(parameters);
             return constructor;
-        }else {
+        } else {
             return null;
         }
     }
 
+    public void addParam(Parameter parameter) {
+        mParameters.add(parameter);
+    }
+
+    public void addParam(List<Parameter> parameters) {
+        mParameters.addAll(parameters);
+    }
+
     public String generateDeclaration(GeneratorType generatorType) {
-        if(generatorType == GeneratorType.CXX){
+        if (generatorType == GeneratorType.CXX) {
             StringBuilder stringBuilder = new StringBuilder();
             stringBuilder.append(getName());
             stringBuilder.append("(");
             int count = mParameters.size();
-            for(int i = 0;i<count;i++){
+            for (int i = 0; i < count; i++) {
                 Parameter parameter = mParameters.get(i);
                 stringBuilder.append(parameter.generate(generatorType));
-                if(i != count -1){
+                if (i != count - 1) {
                     stringBuilder.append(",");
                 }
             }
             stringBuilder.append(");");
             return stringBuilder.toString();
-        }else {
+        } else {
             return null;
         }
     }
 
     public String generateDefination(AST ast, String namespace, GeneratorType generatorType) {
-        if(generatorType == GeneratorType.CXX){
+        if (generatorType == GeneratorType.CXX) {
 
             //fully qualified names
             StringBuilder stringBuilder = new StringBuilder();
@@ -70,10 +83,10 @@ public class Constructor extends Keyword {
             //paramters
             stringBuilder.append("(");
             int count = mParameters.size();
-            for(int i = 0;i<count;i++){
+            for (int i = 0; i < count; i++) {
                 Parameter parameter = mParameters.get(i);
                 stringBuilder.append(parameter.generate(generatorType));
-                if(i != count -1){
+                if (i != count - 1) {
                     stringBuilder.append(",");
                 }
             }
@@ -88,33 +101,32 @@ public class Constructor extends Keyword {
 
             stringBuilder.append("new " + ast.getClassK().getQualifiedName(ast)).append("(");
 
-            for(int i = 0;i<count;i++){
+            for (int i = 0; i < count; i++) {
                 Parameter parameter = mParameters.get(i);
                 String paramName;
-                if(parameter.getIsObject()){
+                if (parameter.getIsObject()) {
                     //*((Applib::DateTime::LocalDate*)startDate->getPointer())
                     //paramName = CXXTemplates.POINTER_TO_NATIVE_CAST.replace("%qualified_name",parameter.getQualifiedName()).replace("%variable",parameter.getName());
                     String dereference;
-                    if(parameter.getIsPointer()){
+                    if (parameter.getIsPointer()) {
                         dereference = "";
-                    }else {
+                    } else {
                         dereference = "*";
                     }
 
-                    paramName = CXXTemplates.WRAPPED_OBJECT.replace("%dereference",dereference).replace("%param_name",parameter.getName()).replace("%qualified_name",parameter.getQualifiedName());
+                    paramName = CXXTemplates.WRAPPED_OBJECT.replace("%dereference", dereference).replace("%param_name", parameter.getName()).replace("%qualified_name", parameter.getQualifiedName());
 
-                }else if(parameter.getIsString()){
-                    paramName = CXXTemplates.STRING_CONV_FUNC_PLATFORM_TO_STD.replace("%from_name",parameter.getName());
-                }else if(parameter.getIsListString()){
-                    paramName = CXXTemplates.STRING_LIST_CONV_PLATFORM_TO_STD.replace("%from_name",parameter.getName());
-                } else if(parameter.getIsListInt()){
-                    paramName = CXXTemplates.INT_LIST_CONV_PLATFORM_TO_STD.replace("%from_name",parameter.getName());
-                }
-                else {
+                } else if (parameter.getIsString()) {
+                    paramName = CXXTemplates.STRING_CONV_FUNC_PLATFORM_TO_STD.replace("%from_name", parameter.getName());
+                } else if (parameter.getIsListString()) {
+                    paramName = CXXTemplates.STRING_LIST_CONV_PLATFORM_TO_STD.replace("%from_name", parameter.getName());
+                } else if (parameter.getIsListInt()) {
+                    paramName = CXXTemplates.INT_LIST_CONV_PLATFORM_TO_STD.replace("%from_name", parameter.getName());
+                } else {
                     paramName = parameter.getName();
                 }
                 stringBuilder.append(paramName);
-                if(i != count -1){
+                if (i != count - 1) {
                     stringBuilder.append(",");
                 }
             }
@@ -124,7 +136,7 @@ public class Constructor extends Keyword {
             stringBuilder.append("{").append("\n\n").append("}");
             return stringBuilder.toString();
 
-        }else {
+        } else {
             return null;
         }
     }

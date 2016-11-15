@@ -1,8 +1,21 @@
 package interfaces;
 
-/**
- * Created by Rando on 7/8/2016.
+
+/***
+ * Copyright (C) RandomeStudios. All rights reserved.
+ *
+ * @author Sachin Gavali
+ * <p>
+ * =+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+
+ * Class        : InterfaceKeyWords
+ * Package      : interfaces
+ * <p>
+ * <p>
+ * This class holds the keywords that makeup the interface defination language
+ * <p>
+ * =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
  */
+
 public class InterfaceKeywords {
     public static final String HEADER_FILE = "HEADER_FILE";
     public static final CharSequence RENAME_FUNC = "RENAME_FUNC";

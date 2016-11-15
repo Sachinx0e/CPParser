@@ -4,10 +4,23 @@ import com.cpp.GeneratorType;
 
 import java.util.List;
 
-/**
- * Created by Rando on 6/27/2016.
+/***
+ * Copyright (C) RandomeStudios. All rights reserved.
+ *
+ * @author Sachin Gavali
+ * <p>
+ * =+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+
+ * Class        : Namespace
+ * Package      : keywords
+ * <p>
+ * <p>
+ * This class represents an AST for namespace
+ *
+ * <p>
+ * =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
  */
-public class Namespace extends Keyword{
+
+public class Namespace extends Keyword {
 
     private Namespace mChildNamespace;
 
@@ -16,13 +29,13 @@ public class Namespace extends Keyword{
     }
 
     public static Namespace read(String currentLine) {
-        String line = currentLine.replace("{","");
-        List<String> words = Keyword.getWords(line," ");
-        if(words.size() > 1){
+        String line = currentLine.replace("{", "");
+        List<String> words = Keyword.getWords(line, " ");
+        if (words.size() > 1) {
             String name = words.get(1);
             Namespace namespace = new Namespace(name);
             return namespace;
-        }else {
+        } else {
             return null;
         }
 
@@ -33,24 +46,24 @@ public class Namespace extends Keyword{
         mChildNamespace = namespace;
     }
 
-    public Namespace getNamespace(){
+    public Namespace getNamespace() {
         return mChildNamespace;
     }
 
-    public String getQualifiedName(){
-        if(mChildNamespace != null){
+    public String getQualifiedName() {
+        if (mChildNamespace != null) {
             return getName() + "::" + mChildNamespace.getQualifiedName();
-        }else {
+        } else {
             return getName();
         }
     }
 
-    public String generate(GeneratorType generatorType){
-        if(generatorType == GeneratorType.CXX){
+    public String generate(GeneratorType generatorType) {
+        if (generatorType == GeneratorType.CXX) {
             String name = getQualifiedName();
             StringBuilder stringBuilder = new StringBuilder();
             return "namespace" + " " + name + "{";
-        }else {
+        } else {
             return "";
         }
     }
