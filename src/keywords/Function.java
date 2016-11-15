@@ -8,8 +8,20 @@ import interfaces.Interface;
 
 import java.util.List;
 
-/**
- * Created by Rando on 6/27/2016.
+/***
+ * Copyright (C) RandomeStudios. All rights reserved.
+ *
+ * @author Sachin Gavali
+ * <p>
+ * =+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+
+ * Class        :
+ * Package      : keywords
+ * <p>
+ * <p>
+ * This class represents an AST for Destructor
+ *
+ * <p>
+ * =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
  */
 public class Function extends Keyword {
 
@@ -20,7 +32,7 @@ public class Function extends Keyword {
     private String mReadLine;
 
 
-    public Function(boolean isVirtual, boolean isStatic, ReturnType returnType, String functionName, List<Parameter> parameters,String readLine) {
+    public Function(boolean isVirtual, boolean isStatic, ReturnType returnType, String functionName, List<Parameter> parameters, String readLine) {
         super(functionName);
         mIsStatic = isStatic;
         mReturnType = returnType;
@@ -29,15 +41,62 @@ public class Function extends Keyword {
         mReadLine = readLine;
     }
 
+    public static Function read(String currentLine, AST ast) {
+        String line = currentLine.replace(CppKeywordNames.VIRTUAL, "").trim();
+        List<String> words = Keyword.getWords(line.replace("(", " ").replace(")", " "), " ");
+        if (words.size() > 0) {
+
+            //get words list for function return types
+            String returnTypesSignature = line.substring(0, line.indexOf("("));
+            List<String> returnWords = Keyword.getWords(returnTypesSignature, " ");
+
+            boolean isVirtual = returnWords.contains(CppKeywordNames.VIRTUAL);
+            boolean isStatic = returnWords.contains(CppKeywordNames.STATIC);
+            boolean isConst = returnWords.contains(CppKeywordNames.CONST);
+
+            ReturnType returnType = null;
+            String functionName = null;
+            int returnTypeIndex = 0;
+            int functionNameIndex = 1;
+
+            if (isVirtual) {
+                returnTypeIndex = 1;
+                functionNameIndex = 2;
+            }
+
+            if (isStatic) {
+                returnTypeIndex = returnTypeIndex + 1;
+                functionNameIndex = functionNameIndex + 1;
+            }
+
+            if (isConst) {
+                returnTypeIndex = returnTypeIndex + 1;
+                functionNameIndex = functionNameIndex + 1;
+            }
+
+            returnType = ReturnType.read(words.get(returnTypeIndex), ast);
+            functionName = words.get(functionNameIndex);
+
+            List<Parameter> parameters = Parameter.read(line, ast);
+
+            Function function = new Function(isVirtual, isStatic, returnType, functionName, parameters, line);
+            return function;
+
+        } else {
+            return null;
+        }
+
+    }
+
     @Override
     public String toString() {
         StringBuilder stringBuilder = new StringBuilder();
 
-        if(mIsVirtual){
+        if (mIsVirtual) {
             stringBuilder.append(CppKeywordNames.VIRTUAL).append(" ");
         }
 
-        if(mIsStatic){
+        if (mIsStatic) {
             stringBuilder.append(CppKeywordNames.STATIC).append(" ");
         }
 
@@ -46,10 +105,10 @@ public class Function extends Keyword {
         //build parameters
         stringBuilder.append("(");
         int count = mParamaters.size();
-        for(int i = 0;i<count;i++){
+        for (int i = 0; i < count; i++) {
             Parameter parameter = mParamaters.get(i);
             stringBuilder.append(parameter.toString());
-            if(i != count -1){
+            if (i != count - 1) {
                 stringBuilder.append(",");
             }
         }
@@ -58,61 +117,11 @@ public class Function extends Keyword {
         return stringBuilder.toString();
     }
 
-    public static Function read(String currentLine,AST ast) {
-        String line = currentLine.replace(CppKeywordNames.VIRTUAL,"").trim();
-        List<String> words = Keyword.getWords(line.replace("("," ").replace(")"," ")," ");
-        if(words.size() > 0){
-
-            boolean isVirtual = false;
-            if(words.get(0).equals(CppKeywordNames.VIRTUAL)){
-                isVirtual = true;
-            }
-
-            boolean isStatic = false;
-            if(isVirtual){
-                if(words.get(1).equals(CppKeywordNames.STATIC)){
-                    isStatic = true;
-                }
-            }else {
-                if(words.get(0).equals(CppKeywordNames.STATIC)){
-                    isStatic = true;
-                }
-            }
-
-
-            ReturnType returnType = null;
-            String functionName = null;
-            int returnTypeIndex = 0;
-            int functionNameIndex = 1;
-
-
-            if((isVirtual && !isStatic) || (!isVirtual && isStatic)){
-                returnTypeIndex = 1;
-                functionNameIndex = 2;
-            }else if(isVirtual && isStatic){
-                returnTypeIndex = 2;
-                functionNameIndex = 3;
-            }
-
-            returnType = ReturnType.read(words.get(returnTypeIndex),ast);
-            functionName = words.get(functionNameIndex);
-
-            List<Parameter> parameters = Parameter.read(line,ast);
-
-            Function function = new Function(isVirtual,isStatic,returnType,functionName,parameters,line);
-            return function;
-
-        }else {
-            return null;
-        }
-
-    }
-
-    public String generateDeclarations(Interface interfaceK,GeneratorType generatorType){
-        if(generatorType == GeneratorType.CXX){
+    public String generateDeclarations(Interface interfaceK, GeneratorType generatorType) {
+        if (generatorType == GeneratorType.CXX) {
             StringBuilder stringBuilder = new StringBuilder();
 
-            if(mIsStatic){
+            if (mIsStatic) {
                 stringBuilder.append(CppKeywordNames.STATIC).append(" ");
             }
 
@@ -121,10 +130,10 @@ public class Function extends Keyword {
             //build parameters
             stringBuilder.append("(");
             int count = mParamaters.size();
-            for(int i = 0;i<count;i++){
+            for (int i = 0; i < count; i++) {
                 Parameter parameter = mParamaters.get(i);
                 stringBuilder.append(parameter.generate(generatorType));
-                if(i != count -1){
+                if (i != count - 1) {
                     stringBuilder.append(",");
                 }
             }
@@ -132,17 +141,17 @@ public class Function extends Keyword {
 
             return stringBuilder.toString();
 
-        }else {
+        } else {
             return null;
         }
     }
 
-    public String generateDefination(AST ast, String namespace, GeneratorType generatorType,Interface interfaceK) {
-        if(generatorType == GeneratorType.CXX){
+    public String generateDefination(AST ast, String namespace, GeneratorType generatorType, Interface interfaceK) {
+        if (generatorType == GeneratorType.CXX) {
             StringBuilder stringBuilder = new StringBuilder();
 
             //return type
-            if(mReturnType.getIsObject()){
+            if (mReturnType.getIsObject()) {
                 stringBuilder.append(namespace).append("::");
             }
             stringBuilder.append(TypeMappings.getMapping(mReturnType.getName()));
@@ -157,10 +166,10 @@ public class Function extends Keyword {
             //build parameters
             stringBuilder.append("(");
             int count = mParamaters.size();
-            for(int i = 0;i<count;i++){
+            for (int i = 0; i < count; i++) {
                 Parameter parameter = mParamaters.get(i);
                 stringBuilder.append(parameter.generate(generatorType));
-                if(i != count -1){
+                if (i != count - 1) {
                     stringBuilder.append(",");
                 }
             }
@@ -171,15 +180,15 @@ public class Function extends Keyword {
 
             StringBuilder functionCallStrBuilder = new StringBuilder();
 
-            if(mReturnType.isPointer()){
-                functionCallStrBuilder.append(CXXTemplates.POINTER_CAST.replace("%qualified_name",mReturnType.getQualifedName()));
+            if (mReturnType.isPointer()) {
+                functionCallStrBuilder.append(CXXTemplates.POINTER_CAST.replace("%qualified_name", mReturnType.getQualifedName()));
             }
 
             //function call operator
-            if(mIsStatic){
+            if (mIsStatic) {
                 functionCallStrBuilder.append(ast.getClassK().getQualifiedName(ast));
                 functionCallStrBuilder.append("::");
-            }else {
+            } else {
                 //init member variable
                 String mVariableName = "m" + ast.getClassK().getName();
                 functionCallStrBuilder.append(mVariableName);
@@ -191,31 +200,30 @@ public class Function extends Keyword {
 
             //pass params to function
             functionCallStrBuilder.append("(");
-            for(int i = 0;i<count;i++){
+            for (int i = 0; i < count; i++) {
                 Parameter parameter = mParamaters.get(i);
-                if(parameter.getIsObject()){
+                if (parameter.getIsObject()) {
                     String dereference;
-                    if(parameter.getIsPointer()){
+                    if (parameter.getIsPointer()) {
                         dereference = "";
-                    }else {
+                    } else {
                         dereference = "*";
                     }
 
                     functionCallStrBuilder.append(CXXTemplates.WRAPPED_OBJECT.
-                            replace("%dereference",dereference).
-                            replace("%param_name",parameter.getName()).
-                            replace("%qualified_name",parameter.getQualifiedName()));
-                }else if(parameter.getIsString()){
-                    functionCallStrBuilder.append(CXXTemplates.STRING_CONV_FUNC_PLATFORM_TO_STD.replace("%from_name",parameter.getName()));
-                }else if(parameter.getIsListString()){
-                    functionCallStrBuilder.append(CXXTemplates.STRING_LIST_CONV_PLATFORM_TO_STD.replace("%from_name",parameter.getName()));
-                } else if(parameter.getIsListInt()){
-                    functionCallStrBuilder.append(CXXTemplates.INT_LIST_CONV_PLATFORM_TO_STD.replace("%from_name",parameter.getName()));
-                }
-                else{
+                            replace("%dereference", dereference).
+                            replace("%param_name", parameter.getName()).
+                            replace("%qualified_name", parameter.getQualifiedName()));
+                } else if (parameter.getIsString()) {
+                    functionCallStrBuilder.append(CXXTemplates.STRING_CONV_FUNC_PLATFORM_TO_STD.replace("%from_name", parameter.getName()));
+                } else if (parameter.getIsListString()) {
+                    functionCallStrBuilder.append(CXXTemplates.STRING_LIST_CONV_PLATFORM_TO_STD.replace("%from_name", parameter.getName()));
+                } else if (parameter.getIsListInt()) {
+                    functionCallStrBuilder.append(CXXTemplates.INT_LIST_CONV_PLATFORM_TO_STD.replace("%from_name", parameter.getName()));
+                } else {
                     functionCallStrBuilder.append(parameter.getName());
                 }
-                if(i != count -1){
+                if (i != count - 1) {
                     functionCallStrBuilder.append(",");
                 }
             }
@@ -223,29 +231,29 @@ public class Function extends Keyword {
             functionCallStrBuilder.append(");\n");
 
             //check if return type is void
-            if(!mReturnType.getName().equals(CppKeywordNames.VOID)){
+            if (!mReturnType.getName().equals(CppKeywordNames.VOID)) {
                 stringBuilder.append(CXXTemplates.SPACING_1).append(mReturnType.getQualifedName());
-                if(mReturnType.isPointer()){
+                if (mReturnType.isPointer()) {
                     stringBuilder.append("*");
                 }
                 stringBuilder.append(" ").append("returnValue").append(" = ");
                 stringBuilder.append(functionCallStrBuilder.toString());
                 String conversionStr;
-                if(mReturnType.getIsObject()){
-                    if(!mReturnType.isPointer()){
-                        stringBuilder.append(CXXTemplates.SPACING_1).append(CXXTemplates.NATIVE_OBJ_TO_POINTER_ASSIGNMENT_EXPRESSION.replace("%qualified_name",mReturnType.getQualifedName())
-                                .replace("%value","returnValue"));
+                if (mReturnType.getIsObject()) {
+                    if (!mReturnType.isPointer()) {
+                        stringBuilder.append(CXXTemplates.SPACING_1).append(CXXTemplates.NATIVE_OBJ_TO_POINTER_ASSIGNMENT_EXPRESSION.replace("%qualified_name", mReturnType.getQualifedName())
+                                .replace("%value", "returnValue"));
                         stringBuilder.append("\n");
-                    }else {
-                        stringBuilder.append(CXXTemplates.SPACING_1).append(CXXTemplates.NATIVE_POINTER_TO_POINTER_ASSIGNMENT_EXPRESSION.replace("%value","returnValue"));
+                    } else {
+                        stringBuilder.append(CXXTemplates.SPACING_1).append(CXXTemplates.NATIVE_POINTER_TO_POINTER_ASSIGNMENT_EXPRESSION.replace("%value", "returnValue"));
                         stringBuilder.append("\n");
                     }
 
                     //convert return value
                     String memOwn = interfaceK.getMemOwnStr(getReadLine());
-                    conversionStr = mReturnType.getConversionString("pointer","convertedValue",memOwn);
-                }else {
-                    conversionStr = mReturnType.getConversionString("returnValue","convertedValue",null) + ";";
+                    conversionStr = mReturnType.getConversionString("pointer", "convertedValue", memOwn);
+                } else {
+                    conversionStr = mReturnType.getConversionString("returnValue", "convertedValue", null) + ";";
                 }
 
                 stringBuilder.append(CXXTemplates.SPACING_1).append(conversionStr).append("\n");
@@ -253,7 +261,7 @@ public class Function extends Keyword {
 
                 stringBuilder.append(CXXTemplates.SPACING_1).append("return").append(" ").append("convertedValue").append(";");
                 stringBuilder.append("\n");
-            }else {
+            } else {
                 stringBuilder.append(CXXTemplates.SPACING_1);
                 stringBuilder.append(functionCallStrBuilder.toString());
             }
@@ -264,7 +272,7 @@ public class Function extends Keyword {
 
             return stringBuilder.toString();
 
-        }else {
+        } else {
             return null;
         }
     }
@@ -275,26 +283,26 @@ public class Function extends Keyword {
 
     @Override
     public boolean equals(Object obj) {
-        if(obj instanceof Function){
+        if (obj instanceof Function) {
             Function rFunction = (Function) obj;
-            if(     mIsStatic == rFunction.mIsStatic &&
+            if (mIsStatic == rFunction.mIsStatic &&
                     mReturnType != null &&
                     mReturnType.equals(rFunction.mReturnType) &&
                     getName().equals(rFunction.getName()) &&
-                    mParamaters.size() == rFunction.mParamaters.size()){
+                    mParamaters.size() == rFunction.mParamaters.size()) {
                 int size = mParamaters.size();
-                for(int i = 0;i<size;i++){
+                for (int i = 0; i < size; i++) {
                     Parameter lParameter = mParamaters.get(i);
                     Parameter rParamater = rFunction.mParamaters.get(i);
-                    if(!lParameter.equals(rParamater)){
+                    if (!lParameter.equals(rParamater)) {
                         return false;
                     }
                 }
                 return true;
-            }else {
+            } else {
                 return false;
             }
-        }else {
+        } else {
             return false;
         }
     }

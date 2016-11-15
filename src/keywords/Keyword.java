@@ -3,30 +3,42 @@ package keywords;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by Rando on 6/27/2016.
+/***
+ * Copyright (C) RandomeStudios. All rights reserved.
+ *
+ * @author Sachin Gavali
+ * <p>
+ * =+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+
+ * Class        : KeyWord
+ * Package      : keywords
+ * <p>
+ * <p>
+ * This class represents an AST for langauge specific keyword
+ *
+ * <p>
+ * =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
  */
 public abstract class Keyword {
     private String mName;
 
-    public Keyword(String name){
+    public Keyword(String name) {
         mName = name;
     }
 
-    public String getName(){
-        return mName;
-    }
-
-    public static List<String> getWords(String currentLine,String seperator) {
-        String [] words = currentLine.split(seperator);
+    public static List<String> getWords(String currentLine, String seperator) {
+        String[] words = currentLine.split(seperator);
         List<String> wordsList = new ArrayList<>();
-        for(String word : words){
+        for (String word : words) {
             word = word.trim();
-            if(!word.equals("")){
+            if (!word.equals("")) {
                 wordsList.add(word);
             }
         }
         return wordsList;
+    }
+
+    public String getName() {
+        return mName;
     }
 
 

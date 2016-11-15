@@ -8,15 +8,29 @@ import misc.HeaderStore;
 import java.io.*;
 import java.util.List;
 
-/**
- * Created by Rando on 7/8/2016.
+
+/***
+ * Copyright (C) RandomeStudios. All rights reserved.
+ *
+ * @author Sachin Gavali
+ * <p>
+ * =+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+
+ * Class        : Worker
+ * Package      : com.cpp
+ * <p>
+ * <p>
+ * This class is the one that does the bulk of all the work. It parses the c++ headers, reads the interface deninations
+ * and generated the wrapper code
+ * <p>
+ * =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
  */
+
 public class Worker {
     private final File mInterfaceFile;
     private final String mNamespace;
     private final File mOutPutDir;
 
-    public Worker(File interfaceFile,String namespace,File outPutDir){
+    public Worker(File interfaceFile, String namespace, File outPutDir) {
         mInterfaceFile = interfaceFile;
         mNamespace = namespace;
         mOutPutDir = outPutDir;
@@ -29,24 +43,24 @@ public class Worker {
 
         //read the file
         AST ast = new AST();
-        parseNormalHeader(ast,interfaceK);
-        if(interfaceK.getIsParentTemplated()){
-            parseParentHeaderTemplated(ast,interfaceK);
-        }else {
-            parseParentHeader(ast,interfaceK);
+        parseNormalHeader(ast, interfaceK);
+        if (interfaceK.getIsParentTemplated()) {
+            parseParentHeaderTemplated(ast, interfaceK);
+        } else {
+            parseParentHeader(ast, interfaceK);
         }
 
 
         System.out.println("Generating for class : " + ast.getClassK().getQualifiedName(ast));
 
-        Generator cxxGenerator = new Generator(ast,mNamespace,interfaceK,GeneratorType.CXX,mOutPutDir);
+        Generator cxxGenerator = new Generator(ast, mNamespace, interfaceK, GeneratorType.CXX, mOutPutDir);
         cxxGenerator.generateHeader();
         cxxGenerator.generateSource();
     }
 
     private void parseNormalHeader(AST ast, Interface interfaceK) throws IOException {
-        File headerFile = HeaderStore.findHeader(interfaceK.getHeaderName(),interfaceK.getHeaderDirName());
-        if(headerFile == null){
+        File headerFile = HeaderStore.findHeader(interfaceK.getHeaderName(), interfaceK.getHeaderDirName());
+        if (headerFile == null) {
             throw new FileNotFoundException("Could not find " + interfaceK.getFullHeaderName());
         }
         BufferedReader bufferedReader = new BufferedReader(new FileReader(headerFile));
@@ -54,48 +68,48 @@ public class Worker {
 
         char previousChar = 'j';
 
-        while((currentLine = bufferedReader.readLine()) != null){
+        while ((currentLine = bufferedReader.readLine()) != null) {
 
             currentLine = currentLine.trim();
-            if(!ast.getHasReachedPrivate() && currentLine.length() != 0){
-                LanguageContruct contruct = CppParser.getConstruct(currentLine,ast);
-                switch (contruct){
+            if (!ast.getHasReachedStop() && currentLine.length() != 0) {
+                LanguageContruct contruct = CppParser.getConstruct(currentLine, ast);
+                switch (contruct) {
                     case IMPORTS:
                         ImportK importK = ImportK.read(currentLine);
                         ast.addImport(importK);
                         break;
                     case NAMESPACE:
                         Namespace namespace = Namespace.read(currentLine);
-                        if(ast.getNamespace() != null){
+                        if (ast.getNamespace() != null) {
                             ast.getNamespace().setChild(namespace);
-                        }else{
+                        } else {
                             ast.setNamespace(namespace);
                         }
                         break;
                     case CLASS:
                         ClassK classK = ClassK.read(currentLine);
                         ast.setClass(classK);
-                        if(interfaceK.getIsParentTemplated()){
+                        if (interfaceK.getIsParentTemplated()) {
                             List<String> templateParams = ClassK.readTemplateParams(currentLine);
                             ast.setTemplateParamsChild(templateParams);
                         }
                         break;
                     case VARIABLE:
                         Variable variable = Variable.read(currentLine);
-                        if(ast.getClassK() != null){
+                        if (ast.getClassK() != null) {
                             ast.getClassK().addVariable(variable);
-                        }else{
+                        } else {
                             throw new RuntimeException("Class not found for variable : " + variable.getName());
                         }
                         break;
                     case CONSTRUCTOR:
                         boolean isIgnoredConstructor = interfaceK.isConstructorIgnored(currentLine);
-                        if(!isIgnoredConstructor){
-                            Constructor constructor = Constructor.read(currentLine,ast);
+                        if (!isIgnoredConstructor) {
+                            Constructor constructor = Constructor.read(currentLine, ast);
                             classK = ast.getClassK();
-                            if(classK != null){
+                            if (classK != null) {
                                 classK.addConstructors(constructor);
-                            }else{
+                            } else {
                                 throw new RuntimeException("Class not found for constructor : " + constructor.getName());
                             }
                         }
@@ -104,11 +118,11 @@ public class Worker {
                         break;
                     case FUNCTION:
                         boolean isIgnoredFunction = interfaceK.isFunctionIgnored(currentLine);
-                        if(!isIgnoredFunction){
-                            Function function = Function.read(currentLine,ast);
-                            if(ast.getClassK() != null){
+                        if (!isIgnoredFunction) {
+                            Function function = Function.read(currentLine, ast);
+                            if (ast.getClassK() != null) {
                                 ast.getClassK().addFunctions(function);
-                            }else {
+                            } else {
                                 throw new RuntimeException("Class not found for constructor : " + function.getName());
                             }
                         }
@@ -117,57 +131,63 @@ public class Worker {
                         break;
                     case UNKNOWN:
                         break;
+                    case PROTECTED:
+                        ast.setHasReachedStop(true);
+                        break;
                     case PRIVATE:
-                        ast.setHasReachedPrivate(true);
+                        ast.setHasReachedStop(true);
                 }
             }
         }
     }
 
     private void parseParentHeader(AST ast, Interface interfaceK) throws IOException {
-        if(!interfaceK.getParentHeaderFileName().isEmpty()){
-            File headerFile = HeaderStore.findHeader(interfaceK.getParentHeaderFileName(),interfaceK.getParentHeaderDirName());
-            if(headerFile == null){
+        if (!interfaceK.getParentHeaderFileName().isEmpty()) {
+            File headerFile = HeaderStore.findHeader(interfaceK.getParentHeaderFileName(), interfaceK.getParentHeaderDirName());
+            if (headerFile == null) {
                 throw new FileNotFoundException("Could not find " + interfaceK.getFullHeaderName());
             }
 
             BufferedReader bufferedReader = new BufferedReader(new FileReader(headerFile));
             String currentLine = null;
 
-            ast.setHasReachedPrivate(false);
+            ast.setHasReachedStop(false);
 
-            while((currentLine = bufferedReader.readLine()) != null){
+            while ((currentLine = bufferedReader.readLine()) != null) {
 
                 currentLine = currentLine.trim();
-                if(!ast.getHasReachedPrivate() && currentLine.length() != 0){
-                    LanguageContruct contruct = CppParser.getConstruct(currentLine,ast);
-                    switch (contruct){
+                if (!ast.getHasReachedStop() && currentLine.length() != 0) {
+                    LanguageContruct contruct = CppParser.getConstruct(currentLine, ast);
+                    switch (contruct) {
                         case CLASS:
                             ClassK classK = ClassK.read(currentLine);
                             ast.setParentClass(classK);
                             break;
                         case VARIABLE:
                             Variable variable = Variable.read(currentLine);
-                            if(ast.getClassK() != null){
+                            if (ast.getClassK() != null) {
                                 ast.getClassK().addVariable(variable);
-                            }else{
+                            } else {
                                 throw new RuntimeException("Class not found for variable : " + variable.getName());
                             }
                             break;
                         case FUNCTION:
-                            String line = currentLine.replace(ast.getParentClassK().getName(),ast.getClassK().getName());
+                            String line = currentLine.replace(ast.getParentClassK().getName(), ast.getClassK().getName());
                             boolean isIgnoredFunction = interfaceK.isFunctionIgnored(currentLine);
-                            if(!isIgnoredFunction){
-                                Function function = Function.read(line,ast);
-                                if(ast.getClassK() != null){
+                            if (!isIgnoredFunction) {
+                                Function function = Function.read(line, ast);
+                                if (ast.getClassK() != null) {
                                     ast.getClassK().addFunctions(function);
-                                }else {
+                                } else {
                                     throw new RuntimeException("Class not found for constructor : " + function.getName());
                                 }
                             }
                             break;
+                        case PROTECTED:
+                            ast.setHasReachedStop(true);
+                            break;
                         case PRIVATE:
-                            ast.setHasReachedPrivate(true);
+                            ast.setHasReachedStop(true);
                     }
                 }
             }
@@ -175,53 +195,56 @@ public class Worker {
     }
 
     private void parseParentHeaderTemplated(AST ast, Interface interfaceK) throws IOException {
-        if(!interfaceK.getParentHeaderFileName().isEmpty()){
-            File headerFile = HeaderStore.findHeader(interfaceK.getParentHeaderFileName(),interfaceK.getParentHeaderDirName());
-            if(headerFile == null){
+        if (!interfaceK.getParentHeaderFileName().isEmpty()) {
+            File headerFile = HeaderStore.findHeader(interfaceK.getParentHeaderFileName(), interfaceK.getParentHeaderDirName());
+            if (headerFile == null) {
                 throw new FileNotFoundException("Could not find " + interfaceK.getFullHeaderName());
             }
 
             BufferedReader bufferedReader = new BufferedReader(new FileReader(headerFile));
             String currentLine = null;
 
-            ast.setHasReachedPrivate(false);
+            ast.setHasReachedStop(false);
 
-            while((currentLine = bufferedReader.readLine()) != null){
+            while ((currentLine = bufferedReader.readLine()) != null) {
 
                 currentLine = currentLine.trim();
-                if(!ast.getHasReachedPrivate() && currentLine.length() != 0){
-                    LanguageContruct contruct = CppParser.getConstructForTemplated(currentLine,ast);
-                    switch (contruct){
+                if (!ast.getHasReachedStop() && currentLine.length() != 0) {
+                    LanguageContruct contruct = CppParser.getConstructForTemplated(currentLine, ast);
+                    switch (contruct) {
                         case TEMPLATE:
-                            String line = currentLine.replace(CppKeywordNames.TEMPLATE,"").replace("typename","").replace(">","");
-                            List<String> words = Keyword.getWords(line,",");
+                            String line = currentLine.replace(CppKeywordNames.TEMPLATE, "").replace("typename", "").replace(">", "");
+                            List<String> words = Keyword.getWords(line, ",");
                             ast.setTemplateParamsParent(words);
                             break;
                         case FUNCTION:
-                            line = currentLine.replace(CppKeywordNames.FUNCTION_TAG,"").trim();
+                            line = currentLine.replace(CppKeywordNames.FUNCTION_TAG, "").trim();
 
                             List<String> templateParamsChild = ast.getTemplateParamsChild();
                             List<String> templateParamsParent = ast.getTemplateParamsParent();
 
                             int size = templateParamsParent.size();
-                            for(int i = 0;i < size;i++){
+                            for (int i = 0; i < size; i++) {
                                 String paramChild = templateParamsChild.get(i);
                                 String paramParent = templateParamsParent.get(i);
-                                line = line.replaceAll(paramParent,paramChild);
+                                line = line.replaceAll(paramParent, paramChild);
                             }
 
                             boolean isIgnoredFunction = interfaceK.isFunctionIgnored(line);
-                            if(!isIgnoredFunction){
-                                Function function = Function.read(line,ast);
-                                if(ast.getClassK() != null){
+                            if (!isIgnoredFunction) {
+                                Function function = Function.read(line, ast);
+                                if (ast.getClassK() != null) {
                                     ast.getClassK().addFunctions(function);
-                                }else {
+                                } else {
                                     throw new RuntimeException("Class not found for constructor : " + function.getName());
                                 }
                             }
                             break;
+                        case PROTECTED:
+                            ast.setHasReachedStop(true);
+                            break;
                         case PRIVATE:
-                            ast.setHasReachedPrivate(true);
+                            ast.setHasReachedStop(true);
                     }
                 }
             }
